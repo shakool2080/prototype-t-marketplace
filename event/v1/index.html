@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Arsenal vs Chelsea – TicketMarketplace</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f0f2f5; color: #1a1a2e; font-size: 13px; }
+
+    /* ── Header ─────────────────────────────────────────── */
+    .header {
+      display: flex; align-items: center; gap: 12px;
+      background: #fff; padding: 0 20px; height: 66px;
+      border-bottom: 1px solid #e2e8f0; position: sticky; top: 0; z-index: 100;
+    }
+    .logo-box {
+      width: 110px; height: 44px; background: #e8ecf0; border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 14px; color: #64748b; flex-shrink: 0;
+    }
+    .event-info { flex: 0 0 auto; }
+    .event-title { font-size: 15px; font-weight: 600; line-height: 1.2; }
+    .event-title .team-a { color: #EF0107; }
+    .event-title .vs { color: #475569; margin: 0 4px; font-weight: 400; font-size: 14px; }
+    .event-title .team-b { color: #034694; }
+    .event-sub { font-size: 12px; color: #64748b; margin-top: 2px; }
+    .header-search {
+      flex: 1; max-width: 340px; margin-left: auto;
+      display: flex; align-items: center; background: #f1f5f9;
+      border: 1px solid #e2e8f0; border-radius: 8px; padding: 0 12px; height: 38px; gap: 8px;
+    }
+    .header-search input {
+      border: none; background: transparent; outline: none; font-size: 13px; color: #1a1a2e; width: 100%;
+    }
+    .header-search .search-icon { color: #94a3b8; font-size: 14px; }
+    .accordion-btn {
+      padding: 0 14px; height: 38px; background: #f1f5f9; border: 1px solid #e2e8f0;
+      border-radius: 8px; cursor: pointer; font-size: 13px; color: #475569;
+      display: flex; align-items: center; gap: 6px;
+    }
+
+    /* ── Main layout ─────────────────────────────────────── */
+    .main-wrap {
+      display: flex; height: calc(100vh - 66px - 48px); overflow: hidden;
+    }
+
+    /* Column shared */
+    .col {
+      display: flex; flex-direction: column; background: #fff;
+      border-right: 1px solid #e2e8f0; overflow: hidden;
+    }
+    .col-header {
+      padding: 12px 14px; border-bottom: 1px solid #e2e8f0; font-weight: 600;
+      font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em;
+      color: #64748b; flex-shrink: 0;
+    }
+    .col-body { flex: 1; overflow-y: auto; }
+
+    /* ── Col 1: Filters ──────────────────────────────────── */
+    .col-filters { width: 200px; flex-shrink: 0; }
+    .filter-section { padding: 14px; border-bottom: 1px solid #f1f5f9; }
+    .filter-label { font-size: 11px; font-weight: 600; color: #475569; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
+    .filter-row { display: flex; gap: 8px; align-items: center; margin-bottom: 6px; }
+    .filter-row label { font-size: 12px; color: #64748b; width: 28px; }
+    .filter-row input[type=number] {
+      width: 70px; padding: 5px 8px; border: 1px solid #e2e8f0; border-radius: 6px;
+      font-size: 12px; outline: none; color: #1a1a2e;
+    }
+    .filter-row input[type=number]:focus { border-color: #6366f1; }
+    .qty-select {
+      width: 100%; padding: 6px 8px; border: 1px solid #e2e8f0; border-radius: 6px;
+      font-size: 12px; outline: none; color: #1a1a2e; background: #fff; cursor: pointer;
+    }
+    .checkbox-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; cursor: pointer; }
+    .checkbox-row input[type=checkbox] { accent-color: #6366f1; width: 14px; height: 14px; }
+    .checkbox-row span { font-size: 12px; color: #334155; }
+    .clear-btn {
+      width: 100%; padding: 7px; background: #f8fafc; border: 1px solid #e2e8f0;
+      border-radius: 6px; cursor: pointer; font-size: 12px; color: #64748b;
+      margin-top: 4px; transition: background 0.15s;
+    }
+    .clear-btn:hover { background: #f1f5f9; color: #334155; }
+    .active-filter-tag {
+      display: inline-flex; align-items: center; gap: 4px; background: #ede9fe;
+      color: #6d28d9; border-radius: 4px; padding: 2px 8px; font-size: 11px;
+      margin: 4px 4px 0 0;
+    }
+    .active-filter-tag .rm { cursor: pointer; font-size: 13px; line-height: 1; }
+    #active-filters { padding: 10px 14px 4px; min-height: 10px; }
+
+    /* ── Col 2: Listings ─────────────────────────────────── */
+    .col-listings { width: 218px; flex-shrink: 0; }
+    .listing-item {
+      padding: 10px 14px; border-bottom: 1px solid #f1f5f9; cursor: pointer;
+      transition: background 0.12s; position: relative;
+    }
+    .listing-item:hover { background: #f8fafc; }
+    .listing-item.selected { background: #ede9fe; border-left: 3px solid #6366f1; padding-left: 11px; }
+    .listing-zone-badge {
+      display: inline-block; width: 10px; height: 10px; border-radius: 50%;
+      margin-right: 5px; vertical-align: middle; flex-shrink: 0;
+    }
+    .listing-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 3px; }
+    .listing-section { font-size: 12px; font-weight: 600; color: #1e293b; display: flex; align-items: center; }
+    .listing-price { font-size: 13px; font-weight: 700; color: #1e293b; }
+    .listing-meta { font-size: 11px; color: #64748b; }
+    .listing-qty { font-size: 11px; color: #94a3b8; }
+    .empty-state {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      height: 200px; text-align: center; padding: 20px;
+    }
+    .empty-state .es-icon { font-size: 28px; margin-bottom: 8px; }
+    .empty-state p { font-size: 12px; color: #64748b; line-height: 1.5; }
+    .listings-count {
+      padding: 8px 14px; font-size: 11px; color: #94a3b8; border-bottom: 1px solid #f1f5f9;
+      background: #fafafa;
+    }
+
+    /* ── Col 3: Detail panel ─────────────────────────────── */
+    .col-detail { width: 240px; flex-shrink: 0; }
+    .detail-empty {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      height: 100%; text-align: center; padding: 24px; color: #94a3b8;
+    }
+    .detail-empty .de-icon { font-size: 32px; margin-bottom: 10px; }
+    .detail-empty p { font-size: 12px; line-height: 1.6; }
+    #detail-content { padding: 14px; height: 100%; overflow-y: auto; display: none; }
+    .detail-zone-bar {
+      height: 5px; border-radius: 3px; margin-bottom: 14px;
+    }
+    .detail-section-name { font-size: 16px; font-weight: 700; color: #1e293b; margin-bottom: 2px; }
+    .detail-row-seat { font-size: 12px; color: #64748b; margin-bottom: 14px; }
+    .detail-divider { border: none; border-top: 1px solid #f1f5f9; margin: 12px 0; }
+    .price-line { display: flex; justify-content: space-between; font-size: 12px; color: #475569; margin-bottom: 4px; }
+    .price-line.total { font-weight: 700; color: #1e293b; font-size: 14px; border-top: 1px solid #e2e8f0; padding-top: 8px; margin-top: 4px; }
+    .detail-qty-row { display: flex; align-items: center; gap: 8px; margin: 14px 0; }
+    .detail-qty-row label { font-size: 12px; color: #64748b; }
+    .detail-qty-row select {
+      padding: 5px 8px; border: 1px solid #e2e8f0; border-radius: 6px;
+      font-size: 12px; outline: none; background: #fff; cursor: pointer;
+    }
+    .seller-box {
+      background: #f8fafc; border-radius: 8px; padding: 10px 12px; margin: 12px 0;
+    }
+    .seller-name { font-size: 12px; font-weight: 600; color: #1e293b; margin-bottom: 2px; }
+    .seller-meta { font-size: 11px; color: #64748b; }
+    .stars { color: #f59e0b; font-size: 11px; }
+    .detail-notes {
+      background: #fefce8; border-left: 3px solid #fbbf24;
+      padding: 8px 10px; border-radius: 0 6px 6px 0; font-size: 11px;
+      color: #92400e; margin: 10px 0; line-height: 1.5;
+    }
+    .buy-btn {
+      width: 100%; padding: 12px; background: #6366f1; color: #fff;
+      border: none; border-radius: 8px; font-size: 14px; font-weight: 600;
+      cursor: pointer; margin-top: 14px; transition: background 0.15s;
+    }
+    .buy-btn:hover { background: #4f46e5; }
+    .buy-confirm {
+      background: #f0fdf4; border: 1px solid #86efac; border-radius: 8px;
+      padding: 12px; text-align: center; margin-top: 14px; display: none;
+    }
+    .buy-confirm .bc-icon { font-size: 24px; }
+    .buy-confirm p { font-size: 12px; color: #166534; margin-top: 4px; line-height: 1.5; }
+
+    /* ── Col 4: Seating map ──────────────────────────────── */
+    .col-map { flex: 1; display: flex; flex-direction: column; min-width: 0; background: #fff; border-right: none; }
+    .disclosure-banner {
+      background: #1e293b; color: #94a3b8; font-size: 10.5px;
+      padding: 6px 14px; line-height: 1.4; flex-shrink: 0;
+    }
+    .map-header { padding: 12px 16px 8px; flex-shrink: 0; }
+    .map-venue-name { font-size: 15px; font-weight: 700; color: #1e293b; margin-bottom: 8px; }
+    .view-toggle { display: flex; gap: 0; border: 1px solid #e2e8f0; border-radius: 7px; width: fit-content; }
+    .view-btn {
+      padding: 5px 14px; font-size: 12px; font-weight: 500; border: none;
+      background: transparent; cursor: pointer; color: #64748b; border-radius: 6px;
+      transition: background 0.15s, color 0.15s;
+    }
+    .view-btn.active { background: #6366f1; color: #fff; }
+    .map-canvas-wrap { flex: 1; display: flex; align-items: center; justify-content: center; padding: 8px 16px; min-height: 0; }
+    #stadiumCanvas { max-width: 100%; max-height: 100%; cursor: pointer; }
+    .map-legend { display: flex; flex-wrap: wrap; gap: 6px; padding: 6px 16px 8px; flex-shrink: 0; }
+    .legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: #475569; cursor: pointer; padding: 3px 8px; border-radius: 20px; border: 1px solid transparent; transition: border 0.12s; }
+    .legend-item:hover { border-color: #e2e8f0; }
+    .legend-item.selected { border-color: #6366f1; background: #ede9fe; color: #6d28d9; }
+    .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    .price-alert {
+      margin: 4px 16px 10px; background: #fff7ed; border: 1px solid #fed7aa;
+      border-radius: 8px; padding: 8px 12px; display: flex; gap: 8px; align-items: flex-start; flex-shrink: 0;
+    }
+    .pa-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+    .pa-main { font-size: 12px; font-weight: 600; color: #9a3412; }
+    .pa-tip { font-size: 11px; color: #c2410c; margin-top: 1px; }
+
+    /* ── Footer ──────────────────────────────────────────── */
+    .footer {
+      height: 48px; background: #fff; border-top: 1px solid #e2e8f0;
+      display: flex; align-items: center; padding: 0 20px;
+      font-size: 11px; color: #94a3b8; gap: 16px;
+    }
+    .footer a { color: #94a3b8; text-decoration: none; }
+    .footer a:hover { color: #6366f1; }
+
+    /* ── Scrollbar ───────────────────────────────────────── */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 2px; }
+  </style>
+</head>
+<body>
+
+<!-- ── Header ──────────────────────────────────────────────── -->
+<header class="header">
+  <div class="logo-box">LOGO</div>
+  <div class="event-info">
+    <div class="event-title">
+      <span class="team-a">Arsenal</span>
+      <span class="vs">vs</span>
+      <span class="team-b">Chelsea</span>
+    </div>
+    <div class="event-sub">Tue 02 Feb 2027 · 20:00 · Emirates Stadium, London</div>
+  </div>
+  <div class="header-search">
+    <span class="search-icon">&#128269;</span>
+    <input type="text" placeholder="Search for another event…">
+  </div>
+  <button class="accordion-btn">&#9776; Menu</button>
+</header>
+
+<!-- ── Main ────────────────────────────────────────────────── -->
+<div class="main-wrap">
+
+  <!-- Col 1: Filters -->
+  <div class="col col-filters">
+    <div class="col-header">Filter Options</div>
+    <div id="active-filters"></div>
+    <div class="col-body">
+      <div class="filter-section">
+        <div class="filter-label">Price per ticket (£)</div>
+        <div class="filter-row">
+          <label>Min</label>
+          <input type="number" id="f-min" min="0" placeholder="0">
+        </div>
+        <div class="filter-row">
+          <label>Max</label>
+          <input type="number" id="f-max" min="0" placeholder="any">
+        </div>
+      </div>
+      <div class="filter-section">
+        <div class="filter-label">Quantity</div>
+        <select class="qty-select" id="f-qty">
+          <option value="">Any quantity</option>
+          <option value="1">1 ticket</option>
+          <option value="2">2 tickets</option>
+          <option value="3">3 tickets</option>
+          <option value="4">4+ tickets</option>
+        </select>
+      </div>
+      <div class="filter-section">
+        <div class="filter-label">Ticket Type</div>
+        <label class="checkbox-row"><input type="checkbox" class="f-type" value="standard" checked><span>Standard</span></label>
+        <label class="checkbox-row"><input type="checkbox" class="f-type" value="club" checked><span>Club / Premium</span></label>
+        <label class="checkbox-row"><input type="checkbox" class="f-type" value="accessible" checked><span>Accessible</span></label>
+      </div>
+      <div class="filter-section">
+        <button class="clear-btn" id="clear-filters-btn">&#10005; Clear all filters</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Col 2: Listings -->
+  <div class="col col-listings">
+    <div class="col-header">Listings</div>
+    <div class="listings-count" id="listings-count">Showing all listings</div>
+    <div class="col-body" id="listings-body"></div>
+  </div>
+
+  <!-- Col 3: Detail -->
+  <div class="col col-detail">
+    <div class="col-header">Ticket Details</div>
+    <div id="detail-empty" class="detail-empty">
+      <div class="de-icon">🎟️</div>
+      <p>Select a listing to<br>see full details</p>
+    </div>
+    <div id="detail-content"></div>
+  </div>
+
+  <!-- Col 4: Map -->
+  <div class="col-map">
+    <div class="disclosure-banner">
+      ⚠️ <strong>Important Disclosure:</strong> TicketMarketplace is a secondary market reseller and isn't the primary provider of these tickets. Final ticket prices may be higher than their original face value.
+    </div>
+    <div class="map-header">
+      <div class="map-venue-name">Emirates Stadium</div>
+      <div class="view-toggle">
+        <button class="view-btn active" id="btn-category">Category View</button>
+        <button class="view-btn" id="btn-section">Section View</button>
+      </div>
+    </div>
+    <div class="map-canvas-wrap">
+      <canvas id="stadiumCanvas" width="480" height="370"></canvas>
+    </div>
+    <div class="map-legend" id="map-legend"></div>
+    <div class="price-alert">
+      <div class="pa-icon">🔥</div>
+      <div>
+        <div class="pa-main">Popular game, price rise expected</div>
+        <div class="pa-tip">Tip: Buy now and avoid paying a higher price</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Footer ───────────────────────────────────────────────── -->
+<footer class="footer">
+  <span>© 2027 TicketMarketplace</span>
+  <a href="#">Help</a>
+  <a href="#">Terms</a>
+  <a href="#">Privacy</a>
+  <a href="#">← Back to results</a>
+</footer>
+
+<script>
+// ────────────────────────────────────────────────────────────
+// DATA
+// ────────────────────────────────────────────────────────────
+const CATEGORIES = {
+  'upper-tier':       { label: 'Upper Tier',    color: '#F97316' },
+  'club':             { label: 'Club Level',     color: '#8B5CF6' },
+  'lower-tier':       { label: 'Lower Tier',     color: '#14B8A6' },
+  'end-upper':        { label: 'End Zones',      color: '#EF4444' },
+  'end-lower':        { label: 'End Corners',    color: '#3B82F6' },
+};
+
+// Stadium zones: each zone is a ring segment on the canvas
+// Angles in degrees: 0=right, 90=bottom, 180=left, 270=top (canvas convention)
+// "wrap" means the arc crosses 0°/360°
+const ZONES = [
+  // Outer ring (upper tier)
+  { id:'ut-n',  cat:'upper-tier', label:'Upper Tier North', startDeg:205, endDeg:335, oRx:205, oRy:168, iRx:160, iRy:130 },
+  { id:'ut-s',  cat:'upper-tier', label:'Upper Tier South', startDeg:25,  endDeg:155, oRx:205, oRy:168, iRx:160, iRy:130 },
+  { id:'ut-e',  cat:'end-upper',  label:'East End Upper',   startDeg:335, endDeg:385, oRx:205, oRy:168, iRx:160, iRy:130 },
+  { id:'ut-w',  cat:'end-upper',  label:'West End Upper',   startDeg:155, endDeg:205, oRx:205, oRy:168, iRx:160, iRy:130 },
+  // Middle ring (club level)
+  { id:'cl-n',  cat:'club',       label:'Club North',       startDeg:205, endDeg:335, oRx:160, oRy:130, iRx:118, iRy:93 },
+  { id:'cl-s',  cat:'club',       label:'Club South',       startDeg:25,  endDeg:155, oRx:160, oRy:130, iRx:118, iRy:93 },
+  { id:'cl-e',  cat:'end-lower',  label:'East Corner',      startDeg:335, endDeg:385, oRx:160, oRy:130, iRx:118, iRy:93 },
+  { id:'cl-w',  cat:'end-lower',  label:'West Corner',      startDeg:155, endDeg:205, oRx:160, oRy:130, iRx:118, iRy:93 },
+  // Inner ring (lower tier)
+  { id:'lt-n',  cat:'lower-tier', label:'Lower Tier North', startDeg:205, endDeg:335, oRx:118, oRy:93,  iRx:82,  iRy:60 },
+  { id:'lt-s',  cat:'lower-tier', label:'Lower Tier South', startDeg:25,  endDeg:155, oRx:118, oRy:93,  iRx:82,  iRy:60 },
+  { id:'lt-e',  cat:'end-lower',  label:'Lower East',       startDeg:335, endDeg:385, oRx:118, oRy:93,  iRx:82,  iRy:60 },
+  { id:'lt-w',  cat:'end-lower',  label:'Lower West',       startDeg:155, endDeg:205, oRx:118, oRy:93,  iRx:82,  iRy:60 },
+];
+
+const LISTINGS = [
+  { id:1,  zoneId:'ut-n', cat:'upper-tier', section:'Block 116', row:'J',  seats:'14-15', qty:2, price:178, fees:27, type:'standard',   sellerName:'TicketKing',   sellerRating:4.8, sellerSales:412, notes:'' },
+  { id:2,  zoneId:'ut-s', cat:'upper-tier', section:'Block 236', row:'M',  seats:'7-10',  qty:4, price:162, fees:24, type:'standard',   sellerName:'GoalLine',     sellerRating:4.6, sellerSales:189, notes:'' },
+  { id:3,  zoneId:'ut-n', cat:'upper-tier', section:'Block 108', row:'B',  seats:'21-22', qty:2, price:195, fees:29, type:'standard',   sellerName:'NorthStand',   sellerRating:4.5, sellerSales:77,  notes:'Aisle seats' },
+  { id:4,  zoneId:'cl-n', cat:'club',       section:'Club 112',  row:'D',  seats:'22-23', qty:2, price:345, fees:52, type:'club',       sellerName:'VIPSeats',     sellerRating:5.0, sellerSales:234, notes:'Club lounge access included.' },
+  { id:5,  zoneId:'cl-s', cat:'club',       section:'Club 229',  row:'B',  seats:'11-12', qty:2, price:318, fees:48, type:'club',       sellerName:'PremiumTix',   sellerRating:4.9, sellerSales:567, notes:'Hospitality package.' },
+  { id:6,  zoneId:'lt-n', cat:'lower-tier', section:'Block 8',   row:'T',  seats:'31-33', qty:3, price:142, fees:21, type:'standard',   sellerName:'FanZone',      sellerRating:4.4, sellerSales:78,  notes:'' },
+  { id:7,  zoneId:'lt-s', cat:'lower-tier', section:'Block 31',  row:'R',  seats:'18-19', qty:2, price:155, fees:23, type:'standard',   sellerName:'SeatSwap',     sellerRating:4.7, sellerSales:145, notes:'Close to the pitch.' },
+  { id:8,  zoneId:'ut-e', cat:'end-upper',  section:'N. Bank Up',row:'KK', seats:'18',    qty:1, price:98,  fees:15, type:'standard',   sellerName:'LocalTix',     sellerRating:4.3, sellerSales:43,  notes:'End stand, great atmosphere.' },
+  { id:9,  zoneId:'ut-w', cat:'end-upper',  section:'S. End Up', row:'GG', seats:'5-6',   qty:2, price:112, fees:17, type:'standard',   sellerName:'ArsenalFan',   sellerRating:4.5, sellerSales:92,  notes:'' },
+  { id:10, zoneId:'cl-e', cat:'end-lower',  section:'E. Corner', row:'F',  seats:'22-23', qty:2, price:198, fees:30, type:'standard',   sellerName:'CornerView',   sellerRating:4.6, sellerSales:67,  notes:'Corner angle – both goals in view.' },
+  { id:11, zoneId:'cl-w', cat:'end-lower',  section:'W. Corner', row:'E',  seats:'9-12',  qty:4, price:185, fees:28, type:'standard',   sellerName:'StadiumPro',   sellerRating:4.8, sellerSales:334, notes:'' },
+  { id:12, zoneId:'lt-n', cat:'lower-tier', section:'Block 12',  row:'S',  seats:'1',     qty:1, price:138, fees:21, type:'accessible', sellerName:'AccessTix',    sellerRating:4.9, sellerSales:28,  notes:'Wheelchair accessible bay.' },
+];
+
+// ────────────────────────────────────────────────────────────
+// STATE
+// ────────────────────────────────────────────────────────────
+let state = {
+  viewMode: 'category',    // 'category' | 'section'
+  selectedZoneId: null,    // zone id or null
+  selectedCat: null,       // category key or null (category view)
+  selectedListingId: null,
+  filters: { minPrice: null, maxPrice: null, qty: '', types: ['standard','club','accessible'] },
+};
+
+// ────────────────────────────────────────────────────────────
+// STADIUM CANVAS
+// ────────────────────────────────────────────────────────────
+const canvas = document.getElementById('stadiumCanvas');
+const ctx = canvas.getContext('2d');
+const CX = canvas.width / 2;
+const CY = canvas.height / 2;
+
+function toRad(deg) { return deg * Math.PI / 180; }
+
+function lighten(hex, pct) {
+  const n = parseInt(hex.slice(1), 16);
+  const r = Math.min(255, ((n >> 16) & 0xff) + Math.round(pct * 2.55));
+  const g = Math.min(255, ((n >> 8)  & 0xff) + Math.round(pct * 2.55));
+  const b = Math.min(255, ((n)       & 0xff) + Math.round(pct * 2.55));
+  return `rgb(${r},${g},${b})`;
+}
+
+function drawAnnularSector(ctx, cx, cy, oRx, oRy, iRx, iRy, startDeg, endDeg) {
+  const s = toRad(startDeg);
+  const e = toRad(endDeg);
+  ctx.beginPath();
+  ctx.ellipse(cx, cy, oRx, oRy, 0, s, e, false);
+  ctx.ellipse(cx, cy, iRx, iRy, 0, e, s, true);
+  ctx.closePath();
+}
+
+function drawStadium() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // Background
+  ctx.fillStyle = '#f0f2f5';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // Outer shadow/outline
+  ctx.beginPath();
+  ctx.ellipse(CX, CY, 215, 178, 0, 0, Math.PI * 2);
+  ctx.fillStyle = '#cbd5e1';
+  ctx.fill();
+
+  const catView = state.viewMode === 'category';
+
+  ZONES.forEach(zone => {
+    const cat = CATEGORIES[zone.cat];
+    let baseColor = cat.color;
+
+    // Determine if selected
+    const isSel = catView
+      ? (state.selectedCat === zone.cat)
+      : (state.selectedZoneId === zone.id);
+
+    // Dim unselected zones if something is selected
+    const hasSel = catView ? !!state.selectedCat : !!state.selectedZoneId;
+    let alpha = (!hasSel || isSel) ? 1.0 : 0.35;
+
+    drawAnnularSector(ctx, CX, CY, zone.oRx, zone.oRy, zone.iRx, zone.iRy, zone.startDeg, zone.endDeg);
+
+    ctx.globalAlpha = alpha;
+    ctx.fillStyle = isSel ? lighten(baseColor, 25) : baseColor;
+    ctx.fill();
+
+    if (isSel) {
+      ctx.strokeStyle = '#fff';
+      ctx.lineWidth = 2.5;
+      ctx.stroke();
+    } else {
+      ctx.strokeStyle = 'rgba(255,255,255,0.3)';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+  });
+
+  // Draw pitch
+  ctx.beginPath();
+  ctx.ellipse(CX, CY, 78, 56, 0, 0, Math.PI * 2);
+  ctx.fillStyle = '#15803d';
+  ctx.fill();
+
+  // Pitch rectangle
+  roundRect(ctx, CX - 60, CY - 38, 120, 76, 6);
+  ctx.fillStyle = '#16a34a';
+  ctx.fill();
+
+  // Pitch markings
+  ctx.strokeStyle = 'rgba(255,255,255,0.55)';
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(CX, CY - 38); ctx.lineTo(CX, CY + 38); ctx.stroke();
+  ctx.beginPath(); ctx.arc(CX, CY, 12, 0, Math.PI * 2); ctx.stroke();
+  ctx.beginPath(); ctx.ellipse(CX, CY, 60, 38, 0, 0, Math.PI * 2); ctx.stroke();
+
+  // Section labels in section view
+  if (state.viewMode === 'section') {
+    drawSectionLabels();
+  }
+}
+
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + w - r, y); ctx.arcTo(x + w, y, x + w, y + r, r);
+  ctx.lineTo(x + w, y + h - r); ctx.arcTo(x + w, y + h, x + w - r, y + h, r);
+  ctx.lineTo(x + r, y + h); ctx.arcTo(x, y + h, x, y + h - r, r);
+  ctx.lineTo(x, y + r); ctx.arcTo(x, y, x + r, y, r);
+  ctx.closePath();
+}
+
+function drawSectionLabels() {
+  // Simplified: show a few section labels on the map
+  const sectionLabels = [
+    { text: 'Blk 108', deg: 248, rPct: 0.84 },
+    { text: 'Blk 116', deg: 280, rPct: 0.84 },
+    { text: 'Blk 236', deg: 80,  rPct: 0.84 },
+    { text: 'N.Bank',  deg: 3,   rPct: 0.83 },
+    { text: 'S.End',   deg: 178, rPct: 0.83 },
+  ];
+  ctx.font = '8px -apple-system, sans-serif';
+  ctx.fillStyle = 'rgba(255,255,255,0.9)';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  sectionLabels.forEach(({ text, deg, rPct }) => {
+    const rad = toRad(deg);
+    const x = CX + 205 * rPct * Math.cos(rad);
+    const y = CY + 168 * rPct * Math.sin(rad);
+    ctx.fillText(text, x, y);
+  });
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'alphabetic';
+}
+
+function getZoneAtPoint(px, py) {
+  const dx = px - CX, dy = py - CY;
+  // Check from innermost to outermost to handle overlapping areas correctly
+  const hits = ZONES.filter(zone => {
+    const inOuter = (dx / zone.oRx) ** 2 + (dy / zone.oRy) ** 2 <= 1;
+    const inInner = (dx / zone.iRx) ** 2 + (dy / zone.iRy) ** 2 <= 1;
+    if (!inOuter || inInner) return false;
+    const angleDeg = ((Math.atan2(dy, dx) * 180 / Math.PI) + 360) % 360;
+    const s = zone.startDeg % 360;
+    const e = zone.endDeg % 360;
+    return s < e ? (angleDeg >= s && angleDeg <= e) : (angleDeg >= s || angleDeg <= e);
+  });
+  return hits[0] || null;
+}
+
+// ────────────────────────────────────────────────────────────
+// FILTERING
+// ────────────────────────────────────────────────────────────
+function getFilteredListings() {
+  return LISTINGS.filter(l => {
+    const { minPrice, maxPrice, qty, types } = state.filters;
+    if (minPrice !== null && l.price < minPrice) return false;
+    if (maxPrice !== null && l.price > maxPrice) return false;
+    if (qty) {
+      const n = parseInt(qty);
+      if (qty === '4' && l.qty < 4) return false;
+      else if (qty !== '4' && l.qty < n) return false;
+    }
+    if (!types.includes(l.type)) return false;
+    // Zone/category filter
+    if (state.viewMode === 'category' && state.selectedCat) {
+      if (l.cat !== state.selectedCat) return false;
+    }
+    if (state.viewMode === 'section' && state.selectedZoneId) {
+      if (l.zoneId !== state.selectedZoneId) return false;
+    }
+    return true;
+  });
+}
+
+// ────────────────────────────────────────────────────────────
+// RENDER LISTINGS
+// ────────────────────────────────────────────────────────────
+function renderListings() {
+  const filtered = getFilteredListings();
+  const body = document.getElementById('listings-body');
+  const countEl = document.getElementById('listings-count');
+
+  const selLabel = state.viewMode === 'category' && state.selectedCat
+    ? CATEGORIES[state.selectedCat].label
+    : state.viewMode === 'section' && state.selectedZoneId
+      ? (ZONES.find(z => z.id === state.selectedZoneId) || {}).label
+      : null;
+
+  countEl.textContent = filtered.length === 0
+    ? 'No listings match'
+    : `${filtered.length} listing${filtered.length > 1 ? 's' : ''}${selLabel ? ' · ' + selLabel : ''}`;
+
+  if (filtered.length === 0) {
+    body.innerHTML = `<div class="empty-state">
+      <div class="es-icon">🔍</div>
+      <p>No tickets match your current filters or selection.<br><br>Try adjusting the filters or selecting a different zone on the map.</p>
+    </div>`;
+    return;
+  }
+
+  body.innerHTML = filtered.map(l => {
+    const cat = CATEGORIES[l.cat];
+    const isSelected = l.id === state.selectedListingId;
+    return `<div class="listing-item${isSelected ? ' selected' : ''}" data-id="${l.id}">
+      <div class="listing-top">
+        <div class="listing-section">
+          <span class="listing-zone-badge" style="background:${cat.color}"></span>
+          ${l.section}
+        </div>
+        <div class="listing-price">£${l.price}</div>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-top:2px;">
+        <div class="listing-meta">Row ${l.row} · ${l.seats}</div>
+        <div class="listing-qty">${l.qty} avail.</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  // Re-attach click handlers
+  body.querySelectorAll('.listing-item').forEach(el => {
+    el.addEventListener('click', () => selectListing(parseInt(el.dataset.id)));
+  });
+}
+
+// ────────────────────────────────────────────────────────────
+// DETAIL PANEL
+// ────────────────────────────────────────────────────────────
+function selectListing(id) {
+  state.selectedListingId = id;
+  const l = LISTINGS.find(x => x.id === id);
+  const cat = CATEGORIES[l.cat];
+  const total = (l.price + l.fees) * 2; // default 2 tickets
+
+  document.getElementById('detail-empty').style.display = 'none';
+  const dc = document.getElementById('detail-content');
+  dc.style.display = 'block';
+
+  const stars = '★'.repeat(Math.floor(l.sellerRating)) + (l.sellerRating % 1 >= 0.5 ? '½' : '');
+
+  const maxQty = Math.min(l.qty, 6);
+  const qtyOptions = Array.from({ length: maxQty }, (_, i) =>
+    `<option value="${i+1}">${i+1} ticket${i > 0 ? 's' : ''}</option>`).join('');
+
+  dc.innerHTML = `
+    <div class="detail-zone-bar" style="background:${cat.color}"></div>
+    <div class="detail-section-name">${l.section}</div>
+    <div class="detail-row-seat">Row ${l.row} · Seats ${l.seats} · <span style="background:${cat.color};color:#fff;padding:1px 7px;border-radius:10px;font-size:10px;">${cat.label}</span></div>
+    <hr class="detail-divider">
+    <div class="detail-qty-row">
+      <label>Quantity:</label>
+      <select id="detail-qty-sel">${qtyOptions}</select>
+    </div>
+    <div class="price-line"><span>Ticket price</span><span>£${l.price} × <span id="dp-qty">2</span></span></div>
+    <div class="price-line"><span>Service fee</span><span>£${l.fees} × <span id="dp-qty2">2</span></span></div>
+    <div class="price-line total"><span>Total</span><span id="dp-total">£${total}</span></div>
+    ${l.notes ? `<div class="detail-notes">📌 ${l.notes}</div>` : ''}
+    <hr class="detail-divider">
+    <div class="seller-box">
+      <div class="seller-name">${l.sellerName}</div>
+      <div class="seller-meta"><span class="stars">${stars}</span> ${l.sellerRating} · ${l.sellerSales} sales</div>
+    </div>
+    <button class="buy-btn" id="buy-btn-main">Buy Ticket →</button>
+    <div class="buy-confirm" id="buy-confirm">
+      <div class="bc-icon">✅</div>
+      <p>Redirecting to checkout…<br><span style="color:#15803d;font-weight:600;">Securing your tickets</span></p>
+    </div>
+  `;
+
+  // Qty change updates totals
+  document.getElementById('detail-qty-sel').addEventListener('change', function() {
+    const q = parseInt(this.value);
+    document.getElementById('dp-qty').textContent = q;
+    document.getElementById('dp-qty2').textContent = q;
+    document.getElementById('dp-total').textContent = '£' + ((l.price + l.fees) * q);
+  });
+
+  // Buy button
+  document.getElementById('buy-btn-main').addEventListener('click', () => {
+    document.getElementById('buy-btn-main').style.display = 'none';
+    document.getElementById('buy-confirm').style.display = 'block';
+    setTimeout(() => {
+      document.getElementById('buy-btn-main').style.display = 'block';
+      document.getElementById('buy-confirm').style.display = 'none';
+    }, 3000);
+  });
+
+  renderListings(); // re-render to show selected state
+}
+
+// ────────────────────────────────────────────────────────────
+// LEGEND
+// ────────────────────────────────────────────────────────────
+function renderLegend() {
+  const legendEl = document.getElementById('map-legend');
+  legendEl.innerHTML = Object.entries(CATEGORIES).map(([key, cat]) => {
+    const isSel = state.selectedCat === key;
+    return `<div class="legend-item${isSel ? ' selected' : ''}" data-cat="${key}">
+      <span class="legend-dot" style="background:${cat.color}"></span>
+      <span>${cat.label}</span>
+    </div>`;
+  }).join('');
+
+  legendEl.querySelectorAll('.legend-item').forEach(el => {
+    el.addEventListener('click', () => {
+      const cat = el.dataset.cat;
+      if (state.viewMode === 'category') {
+        state.selectedCat = (state.selectedCat === cat) ? null : cat;
+        state.selectedListingId = null;
+        resetDetailPanel();
+        draw();
+      }
+    });
+  });
+}
+
+// ────────────────────────────────────────────────────────────
+// ACTIVE FILTER TAGS
+// ────────────────────────────────────────────────────────────
+function renderActiveTags() {
+  const { minPrice, maxPrice, qty, types } = state.filters;
+  const tags = [];
+  if (minPrice !== null) tags.push({ label: `Min £${minPrice}`, key: 'minPrice' });
+  if (maxPrice !== null) tags.push({ label: `Max £${maxPrice}`, key: 'maxPrice' });
+  if (qty) tags.push({ label: `${qty === '4' ? '4+' : qty} ticket${qty !== '1' ? 's' : ''}`, key: 'qty' });
+  const allTypes = ['standard','club','accessible'];
+  allTypes.forEach(t => {
+    if (!types.includes(t)) tags.push({ label: `No ${t}`, key: 'type-' + t });
+  });
+
+  const el = document.getElementById('active-filters');
+  el.innerHTML = tags.map(t =>
+    `<span class="active-filter-tag">${t.label} <span class="rm" data-key="${t.key}">×</span></span>`
+  ).join('');
+
+  el.querySelectorAll('.rm').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const k = btn.dataset.key;
+      if (k === 'minPrice') { state.filters.minPrice = null; document.getElementById('f-min').value = ''; }
+      else if (k === 'maxPrice') { state.filters.maxPrice = null; document.getElementById('f-max').value = ''; }
+      else if (k === 'qty') { state.filters.qty = ''; document.getElementById('f-qty').value = ''; }
+      else if (k.startsWith('type-')) {
+        const t = k.slice(5);
+        state.filters.types.push(t);
+        document.querySelector(`.f-type[value="${t}"]`).checked = true;
+      }
+      state.selectedListingId = null;
+      resetDetailPanel();
+      draw();
+    });
+  });
+}
+
+function resetDetailPanel() {
+  document.getElementById('detail-empty').style.display = '';
+  document.getElementById('detail-content').style.display = 'none';
+  document.getElementById('detail-content').innerHTML = '';
+}
+
+// ────────────────────────────────────────────────────────────
+// MASTER DRAW
+// ────────────────────────────────────────────────────────────
+function draw() {
+  drawStadium();
+  renderLegend();
+  renderListings();
+  renderActiveTags();
+}
+
+// ────────────────────────────────────────────────────────────
+// EVENT LISTENERS
+// ────────────────────────────────────────────────────────────
+
+// Canvas click
+canvas.addEventListener('click', e => {
+  const rect = canvas.getBoundingClientRect();
+  const scaleX = canvas.width / rect.width;
+  const scaleY = canvas.height / rect.height;
+  const px = (e.clientX - rect.left) * scaleX;
+  const py = (e.clientY - rect.top)  * scaleY;
+  const zone = getZoneAtPoint(px, py);
+
+  if (zone) {
+    if (state.viewMode === 'category') {
+      state.selectedCat = (state.selectedCat === zone.cat) ? null : zone.cat;
+    } else {
+      state.selectedZoneId = (state.selectedZoneId === zone.id) ? null : zone.id;
+    }
+    state.selectedListingId = null;
+    resetDetailPanel();
+    draw();
+  }
+});
+
+// Canvas hover cursor
+canvas.addEventListener('mousemove', e => {
+  const rect = canvas.getBoundingClientRect();
+  const scaleX = canvas.width / rect.width;
+  const scaleY = canvas.height / rect.height;
+  const px = (e.clientX - rect.left) * scaleX;
+  const py = (e.clientY - rect.top)  * scaleY;
+  canvas.style.cursor = getZoneAtPoint(px, py) ? 'pointer' : 'default';
+});
+
+// View toggle
+document.getElementById('btn-category').addEventListener('click', () => {
+  state.viewMode = 'category';
+  state.selectedZoneId = null;
+  document.getElementById('btn-category').classList.add('active');
+  document.getElementById('btn-section').classList.remove('active');
+  draw();
+});
+document.getElementById('btn-section').addEventListener('click', () => {
+  state.viewMode = 'section';
+  state.selectedCat = null;
+  document.getElementById('btn-section').classList.add('active');
+  document.getElementById('btn-category').classList.remove('active');
+  draw();
+});
+
+// Filters
+document.getElementById('f-min').addEventListener('input', e => {
+  state.filters.minPrice = e.target.value ? parseFloat(e.target.value) : null;
+  state.selectedListingId = null; resetDetailPanel(); draw();
+});
+document.getElementById('f-max').addEventListener('input', e => {
+  state.filters.maxPrice = e.target.value ? parseFloat(e.target.value) : null;
+  state.selectedListingId = null; resetDetailPanel(); draw();
+});
+document.getElementById('f-qty').addEventListener('change', e => {
+  state.filters.qty = e.target.value;
+  state.selectedListingId = null; resetDetailPanel(); draw();
+});
+document.querySelectorAll('.f-type').forEach(cb => {
+  cb.addEventListener('change', () => {
+    state.filters.types = Array.from(document.querySelectorAll('.f-type:checked')).map(x => x.value);
+    state.selectedListingId = null; resetDetailPanel(); draw();
+  });
+});
+document.getElementById('clear-filters-btn').addEventListener('click', () => {
+  state.filters = { minPrice: null, maxPrice: null, qty: '', types: ['standard','club','accessible'] };
+  document.getElementById('f-min').value = '';
+  document.getElementById('f-max').value = '';
+  document.getElementById('f-qty').value = '';
+  document.querySelectorAll('.f-type').forEach(cb => cb.checked = true);
+  state.selectedListingId = null; resetDetailPanel(); draw();
+});
+
+// ────────────────────────────────────────────────────────────
+// INIT
+// ────────────────────────────────────────────────────────────
+draw();
+</script>
+</body>
+</html>
