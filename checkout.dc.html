@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body { margin: 0; font-family: 'Inter', system-ui, sans-serif; color: #0f172a; background: #f1f5f9; }
+    a { text-decoration: none; color: inherit; }
+    button { font-family: inherit; cursor: pointer; border: none; background: none; }
+    input, select { font-family: inherit; }
+    .dotted-row { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; padding: 6px 0; font-size: 13px; color: #374151; }
+    .dotted-row::after { content: ''; flex: 1; border-bottom: 1px dotted #cbd5e1; order: 1; }
+    .dotted-row span:first-child { order: 0; }
+    .dotted-row span:last-child { order: 2; white-space: nowrap; }
+    @media(max-width:768px){.rh{display:none!important}.rg1{display:block!important}.rsticky{position:relative!important;top:auto!important}.co-aside{order:-1!important}.co-rows{display:none!important}.co-extra{display:none!important}}
+  </style>
+</helmet>
+
+<!-- Billing address modal -->
+<sc-if value="{{ billingModal }}" hint-placeholder-val="{{ false }}">
+  <div onclick="{{ closeBillingModal }}" style="position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;display:flex;align-items:center;justify-content:center;padding:16px;">
+    <div onclick="{{ stopProp }}" style="background:#fff;border-radius:12px;width:100%;max-width:420px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.25);">
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:20px 20px 16px;border-bottom:1px solid #f1f5f9;">
+        <div style="font-size:16px;font-weight:700;color:#0f172a;">Billing address</div>
+        <button onclick="{{ closeBillingModal }}" style="color:#94a3b8;font-size:22px;line-height:1;padding:2px 6px;">×</button>
+      </div>
+      <div style="padding:20px;display:flex;flex-direction:column;gap:13px;">
+        <div><label style="display:block;font-size:13px;font-weight:600;color:#374151;margin-bottom:5px;">First Name*</label><input type="text" style="width:100%;padding:10px 12px;border:1.5px solid #2563eb;border-radius:7px;font-size:14px;outline:none;"/></div>
+        <div><label style="display:block;font-size:13px;font-weight:600;color:#374151;margin-bottom:5px;">Last Name*</label><input type="text" style="width:100%;padding:10px 12px;border:1.5px solid #e2e8f0;border-radius:7px;font-size:14px;outline:none;"/></div>
+        <div><label style="display:block;font-size:13px;font-weight:600;color:#374151;margin-bottom:5px;">Company</label><input type="text" style="width:100%;padding:10px 12px;border:1.5px solid #e2e8f0;border-radius:7px;font-size:14px;outline:none;"/></div>
+        <div>
+          <label style="display:block;font-size:13px;font-weight:600;color:#374151;margin-bottom:5px;">Mobile Phone</label>
+          <div style="display:flex;gap:6px;">
+            <div style="display:flex;align-items:center;gap:5px;padding:0 10px;border:1.5px solid #e2e8f0;border-radius:7px;font-size:13px;background:#f8fafc;white-space:nowrap;height:42px;">🇬🇧 +44 ▾</div>
+            <input type="tel" style="flex:1;padding:10px 12px;border:1.5px solid #e2e8f0;border-radius:7px;font-size:14px;outline:none;"/>
+          </div>
+          <div style="font-size:11px;color:#94a3b8;margin-top:4px;">ex: +44-20-1234567</div>
+        </div>
+        <div><label style="display:block;font-size:13px;font-weight:600;color:#374151;margin-bottom:5px;">Street address</label><input type="text" style="width:100%;padding:10px 12px;border:1.5px solid #e2e8f0;border-radius:7px;font-size:14px;outline:none;"/></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <div><label style="display:block;font-size:13px;font-weight:600;color:#374151;margin-bottom:5px;">City*</label><input type="text" style="width:100%;padding:10px 12px;border:1.5px solid #e2e8f0;border-radius:7px;font-size:14px;outline:none;"/></div>
+          <div><label style="display:block;font-size:13px;font-weight:600;color:#374151;margin-bottom:5px;">Postcode</label><input type="text" style="width:100%;padding:10px 12px;border:1.5px solid #e2e8f0;border-radius:7px;font-size:14px;outline:none;"/></div>
+        </div>
+        <div><label style="display:block;font-size:13px;font-weight:600;color:#374151;margin-bottom:5px;">Country*</label><select style="width:100%;padding:10px 12px;border:1.5px solid #e2e8f0;border-radius:7px;font-size:14px;outline:none;background:#fff;"><option>United Kingdom</option><option>United States</option><option>France</option><option>Germany</option><option>Spain</option><option>Other</option></select></div>
+        <button onclick="{{ saveBilling }}" style="width:100%;padding:13px;background:#16a34a;color:#fff;border-radius:30px;font-size:15px;font-weight:700;cursor:pointer;margin-top:4px;">OK</button>
+      </div>
+    </div>
+  </div>
+</sc-if>
+
+<!-- Electronic delivery modal -->
+<sc-if value="{{ electronicModal }}" hint-placeholder-val="{{ false }}">
+  <div onclick="{{ closeElectronicModal }}" style="position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;display:flex;align-items:center;justify-content:center;padding:16px;">
+    <div onclick="{{ stopProp }}" style="background:#fff;border-radius:12px;width:100%;max-width:400px;box-shadow:0 20px 60px rgba(0,0,0,.25);">
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:20px 20px 16px;border-bottom:1px solid #f1f5f9;">
+        <div style="font-size:16px;font-weight:700;color:#0f172a;">Delivery address</div>
+        <button onclick="{{ closeElectronicModal }}" style="color:#94a3b8;font-size:22px;line-height:1;padding:2px 6px;">×</button>
+      </div>
+      <div style="padding:20px;display:flex;flex-direction:column;gap:13px;">
+        <div><label style="display:block;font-size:13px;font-weight:600;color:#374151;margin-bottom:5px;">Email</label><input type="email" style="width:100%;padding:10px 12px;border:1.5px solid #2563eb;border-radius:7px;font-size:14px;outline:none;"/></div>
+        <div>
+          <label style="display:block;font-size:13px;font-weight:600;color:#374151;margin-bottom:5px;">Mobile Phone</label>
+          <div style="display:flex;gap:6px;">
+            <div style="display:flex;align-items:center;gap:5px;padding:0 10px;border:1.5px solid #e2e8f0;border-radius:7px;font-size:13px;background:#f8fafc;white-space:nowrap;height:42px;">🇬🇧 +44 ▾</div>
+            <input type="tel" style="flex:1;padding:10px 12px;border:1.5px solid #e2e8f0;border-radius:7px;font-size:14px;outline:none;"/>
+          </div>
+          <div style="font-size:11px;color:#94a3b8;margin-top:4px;">ex: +44-20-1234567</div>
+        </div>
+        <button onclick="{{ saveElectronic }}" style="width:100%;padding:13px;background:#16a34a;color:#fff;border-radius:30px;font-size:15px;font-weight:700;cursor:pointer;margin-top:4px;">OK</button>
+      </div>
+    </div>
+  </div>
+</sc-if>
+
+<!-- Courier delivery modal -->
+<sc-if value="{{ courierModal }}" hint-placeholder-val="{{ false }}">
+  <div onclick="{{ closeCourierModal }}" style="position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;display:flex;align-items:center;justify-content:center;padding:16px;">
+    <div onclick="{{ stopProp }}" style="background:#fff;border-radius:12px;width:100%;max-width:400px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.25);">
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:20px 20px 16px;border-bottom:1px solid #f1f5f9;">
+        <div style="font-size:16px;font-weight:700;color:#0f172a;">Delivery address</div>
+        <button onclick="{{ closeCourierModal }}" style="color:#94a3b8;font-size:22px;line-height:1;padding:2px 6px;">×</button>
+      </div>
+      <div style="padding:20px;display:flex;flex-direction:column;gap:13px;">
+        <label style="display:flex;align-items:center;gap:8px;font-size:14px;color:#374151;cursor:pointer;"><input type="checkbox" style="width:16px;height:16px;accent-color:#2563eb;"/> Hotel Address</label>
+        <div><label style="display:block;font-size:13px;font-weight:600;color:#374151;margin-bottom:5px;">Recipient name</label><input type="text" style="width:100%;padding:10px 12px;border:1.5px solid #e2e8f0;border-radius:7px;font-size:14px;outline:none;"/></div>
+        <div><label style="display:block;font-size:13px;font-weight:600;color:#374151;margin-bottom:5px;">Street address</label><input type="text" style="width:100%;padding:10px 12px;border:1.5px solid #e2e8f0;border-radius:7px;font-size:14px;outline:none;"/></div>
+        <div><label style="display:block;font-size:13px;font-weight:600;color:#374151;margin-bottom:5px;">City*</label><input type="text" style="width:100%;padding:10px 12px;border:1.5px solid #e2e8f0;border-radius:7px;font-size:14px;outline:none;"/></div>
+        <div><label style="display:block;font-size:13px;font-weight:600;color:#374151;margin-bottom:5px;">Country*</label><input type="text" style="width:100%;padding:10px 12px;border:1.5px solid #e2e8f0;border-radius:7px;font-size:14px;outline:none;"/></div>
+        <div><label style="display:block;font-size:13px;font-weight:600;color:#374151;margin-bottom:5px;">State / Province</label><input type="text" style="width:100%;padding:10px 12px;border:1.5px solid #e2e8f0;border-radius:7px;font-size:14px;outline:none;"/></div>
+        <button onclick="{{ saveCourier }}" style="width:100%;padding:13px;background:#16a34a;color:#fff;border-radius:30px;font-size:15px;font-weight:700;cursor:pointer;margin-top:4px;">OK</button>
+      </div>
+    </div>
+  </div>
+</sc-if>
+
+<div style="display:flex;flex-direction:column;min-height:100vh;background:#f1f5f9;">
+
+  <header style="background:#0f172a;color:#fff;position:sticky;top:0;z-index:100;display:flex;align-items:center;padding:0 16px;height:54px;gap:12px;box-shadow:0 1px 4px rgba(0,0,0,.3);">
+    <a href="home.dc.html" style="font-size:17px;font-weight:700;color:#fff;white-space:nowrap;flex-shrink:0;letter-spacing:-.3px;">TicketMarketplace</a>
+    <div style="margin-left:auto;display:flex;align-items:center;gap:6px;font-size:13px;color:#94a3b8;">
+      <a href="event.dc.html" style="color:#64748b;">← Back to listings</a>
+    </div>
+  </header>
+
+  <div style="background:#fff;border-bottom:1px solid #e2e8f0;padding:10px 24px;">
+    <div style="max-width:1080px;margin:0 auto;">
+      <div style="font-size:12px;color:#94a3b8;"><a href="home.dc.html" style="color:#64748b;">Home</a> › <a href="event.dc.html" style="color:#64748b;">Arsenal vs Chelsea</a> › Checkout</div>
+    </div>
+  </div>
+
+  <main style="flex:1;padding:28px 24px 48px;">
+    <div class="rg1" style="max-width:1080px;margin:0 auto;display:grid;grid-template-columns:1fr 380px;gap:28px;align-items:start;">
+
+      <!-- LEFT COLUMN -->
+      <div style="display:flex;flex-direction:column;gap:20px;">
+
+        <!-- Billing address -->
+        <div style="background:#fff;border-radius:10px;border:1px solid #e2e8f0;padding:22px 24px;">
+          <div style="font-size:16px;font-weight:700;color:#0f172a;margin-bottom:14px;">Billing address</div>
+          <sc-if value="{{ billingAdded }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border:1px solid #e2e8f0;border-radius:8px;background:#f8fafc;">
+              <div>
+                <div style="font-size:13px;font-weight:600;color:#0f172a;">John Smith · 12 Baker Street, London</div>
+                <div style="font-size:12px;color:#64748b;">United Kingdom</div>
+              </div>
+              <div style="display:flex;gap:10px;">
+                <button onclick="{{ openBillingModal }}" style="font-size:12px;font-weight:600;color:#2563eb;background:none;border:none;cursor:pointer;">View</button>
+                <button onclick="{{ openBillingModal }}" style="font-size:12px;font-weight:600;color:#64748b;background:none;border:none;cursor:pointer;">Edit</button>
+              </div>
+            </div>
+          </sc-if>
+          <sc-if value="{{ billingNotAdded }}" hint-placeholder-val="{{ true }}">
+            <div style="border:1px solid #e2e8f0;border-radius:8px;overflow:hidden;">
+              <div style="display:flex;align-items:flex-start;gap:10px;padding:13px 14px;background:#fffbeb;border-bottom:1px solid #fde68a;">
+                <span style="font-size:14px;flex-shrink:0;margin-top:1px;">⚠️</span>
+                <div style="font-size:13px;color:#92400e;line-height:1.5;"><strong>Address is required</strong><br/>The address connected to your payment card</div>
+              </div>
+              <div style="padding:12px 14px;text-align:center;">
+                <button onclick="{{ openBillingModal }}" style="display:inline-flex;align-items:center;gap:6px;padding:8px 22px;border:1.5px solid #0f172a;border-radius:20px;font-size:13px;font-weight:600;color:#0f172a;background:#fff;cursor:pointer;">+ Add</button>
+              </div>
+            </div>
+          </sc-if>
+        </div>
+
+        <!-- Delivery options -->
+        <div style="background:#fff;border-radius:10px;border:1px solid #e2e8f0;padding:22px 24px;">
+          <div style="font-size:16px;font-weight:700;color:#0f172a;margin-bottom:4px;">Delivery options</div>
+          <div style="font-size:13px;color:#64748b;margin-bottom:14px;font-weight:600;">Where should we send the tickets?</div>
+
+          <!-- Prototype toggle — simulates system-determined delivery method -->
+          <div style="border:1px solid #e2e8f0;background:#f8fafc;border-radius:7px;padding:9px 12px;display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px;">
+            <span style="font-size:12px;font-weight:600;color:#64748b;">🔧 Prototype: simulate delivery method</span>
+            <div style="display:flex;gap:4px;">
+              <button onclick="{{ setDeliveryElectronic }}" style="padding:4px 10px;font-size:11px;font-weight:700;border-radius:20px;border:1.5px solid {{ dElBdr }};background:{{ dElBg }};color:{{ dElCol }};cursor:pointer;">📄 Electronic</button>
+              <button onclick="{{ setDeliveryCourier }}" style="padding:4px 10px;font-size:11px;font-weight:700;border-radius:20px;border:1.5px solid {{ dCoBdr }};background:{{ dCoBg }};color:{{ dCoCol }};cursor:pointer;">🚚 Courier</button>
+              <button onclick="{{ setDeliveryBoxoffice }}" style="padding:4px 10px;font-size:11px;font-weight:700;border-radius:20px;border:1.5px solid {{ dBoBdr }};background:{{ dBoBg }};color:{{ dBoCol }};cursor:pointer;">🏟️ Box Office</button>
+            </div>
+          </div>
+
+          <!-- Electronic -->
+          <sc-if value="{{ isElectronic }}" hint-placeholder-val="{{ true }}">
+            <div style="border:1px solid #e2e8f0;border-radius:8px;overflow:hidden;">
+              <div style="padding:13px 14px;background:#f8fafc;border-bottom:1px solid #f1f5f9;">
+                <div style="font-size:13px;font-weight:600;color:#0f172a;">📄 <strong>Electronic</strong> ready to download and print by <strong style="color:#2563eb;">Fri, May 20th</strong></div>
+                <div style="font-size:12px;color:#64748b;margin-top:3px;">eTickets are in PDF format, you download and print them.</div>
+              </div>
+              <sc-if value="{{ electronicAdded }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;">
+                  <div style="font-size:13px;font-weight:600;color:#0f172a;">john@example.com · +44 7700 900000</div>
+                  <div style="display:flex;gap:10px;">
+                    <button onclick="{{ openElectronicModal }}" style="font-size:12px;font-weight:600;color:#2563eb;background:none;border:none;cursor:pointer;">Edit</button>
+                  </div>
+                </div>
+              </sc-if>
+              <sc-if value="{{ electronicNotAdded }}" hint-placeholder-val="{{ true }}">
+                <div style="background:#fffbeb;border-bottom:1px solid #fde68a;padding:11px 14px;display:flex;align-items:center;gap:8px;">
+                  <span style="font-size:13px;">⚠️</span>
+                  <span style="font-size:13px;color:#92400e;">Address is required</span>
+                </div>
+                <div style="padding:12px 14px;text-align:center;">
+                  <button onclick="{{ openElectronicModal }}" style="display:inline-flex;align-items:center;gap:6px;padding:8px 22px;border:1.5px solid #0f172a;border-radius:20px;font-size:13px;font-weight:600;color:#0f172a;background:#fff;cursor:pointer;">+ Add</button>
+                </div>
+              </sc-if>
+            </div>
+          </sc-if>
+
+          <!-- Courier -->
+          <sc-if value="{{ isCourier }}" hint-placeholder-val="{{ false }}">
+            <div style="border:1px solid #e2e8f0;border-radius:8px;overflow:hidden;">
+              <div style="padding:13px 14px;background:#f8fafc;border-bottom:1px solid #f1f5f9;">
+                <div style="font-size:13px;font-weight:600;color:#0f172a;">🚚 <strong>Courier delivery</strong></div>
+                <div style="font-size:12px;color:#2563eb;font-weight:600;margin-top:2px;">Your tickets will be delivered by <strong>Fri, May 20th</strong></div>
+              </div>
+              <sc-if value="{{ courierAdded }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;">
+                  <div style="font-size:13px;font-weight:600;color:#0f172a;">John Smith · 12 Baker Street, London</div>
+                  <button onclick="{{ openCourierModal }}" style="font-size:12px;font-weight:600;color:#2563eb;background:none;border:none;cursor:pointer;">Edit</button>
+                </div>
+              </sc-if>
+              <sc-if value="{{ courierNotAdded }}" hint-placeholder-val="{{ true }}">
+                <div style="background:#fffbeb;border-bottom:1px solid #fde68a;padding:11px 14px;display:flex;align-items:center;gap:8px;">
+                  <span style="font-size:13px;">⚠️</span>
+                  <span style="font-size:13px;color:#92400e;">Address is required</span>
+                </div>
+                <div style="padding:12px 14px;text-align:center;">
+                  <button onclick="{{ openCourierModal }}" style="display:inline-flex;align-items:center;gap:6px;padding:8px 22px;border:1.5px solid #0f172a;border-radius:20px;font-size:13px;font-weight:600;color:#0f172a;background:#fff;cursor:pointer;">+ Add</button>
+                </div>
+              </sc-if>
+            </div>
+          </sc-if>
+
+          <!-- Box Office -->
+          <sc-if value="{{ isBoxoffice }}" hint-placeholder-val="{{ false }}">
+            <div style="border:1px solid #e2e8f0;border-radius:8px;padding:14px 16px;background:#f8fafc;">
+              <div style="font-size:13px;font-weight:600;color:#0f172a;margin-bottom:4px;">🏟️ Box office collection</div>
+              <div style="font-size:12.5px;color:#64748b;line-height:1.6;">Collect your tickets at the Emirates Stadium box office. You will need a valid ID matching the booking name. Box office opens 2 hours before kick-off.</div>
+            </div>
+          </sc-if>
+        </div>
+
+        <!-- Payment details -->
+        <div style="background:#fff;border-radius:10px;border:1px solid #e2e8f0;padding:22px 24px;">
+          <div style="font-size:16px;font-weight:700;color:#0f172a;margin-bottom:16px;">Payment details</div>
+          <div style="border:1px solid #e2e8f0;border-radius:8px;overflow:hidden;">
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid #f1f5f9;background:#f8fafc;">
+              <div style="font-size:13px;font-weight:700;color:#0f172a;">Card details</div>
+              <div style="display:flex;gap:6px;align-items:center;">
+                <div style="background:#1a1f71;color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:3px;letter-spacing:.5px;">VISA</div>
+                <div style="background:#eb001b;color:#fff;font-size:9px;font-weight:800;padding:3px 6px;border-radius:3px;position:relative;">
+                  <span style="position:relative;z-index:1;">MC</span>
+                  <div style="position:absolute;top:0;right:0;bottom:0;width:60%;background:#f79e1b;border-radius:0 3px 3px 0;"></div>
+                </div>
+              </div>
+            </div>
+            <div style="padding:14px 14px;display:flex;flex-direction:column;gap:10px;">
+              <div style="position:relative;">
+                <input type="text" placeholder="Card Number" style="width:100%;padding:10px 40px 10px 12px;border:1.5px solid #e2e8f0;border-radius:7px;font-size:14px;outline:none;letter-spacing:.5px;"/>
+                <span style="position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:16px;color:#94a3b8;">💳</span>
+              </div>
+              <input type="text" placeholder="Name on card" style="width:100%;padding:10px 12px;border:1.5px solid #e2e8f0;border-radius:7px;font-size:14px;outline:none;"/>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                <input type="text" placeholder="MM / YY" style="padding:10px 12px;border:1.5px solid #e2e8f0;border-radius:7px;font-size:14px;outline:none;"/>
+                <div style="position:relative;">
+                  <input type="text" placeholder="CVC" style="width:100%;padding:10px 36px 10px 12px;border:1.5px solid #e2e8f0;border-radius:7px;font-size:14px;outline:none;"/>
+                  <span style="position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:14px;color:#94a3b8;">ⓘ</span>
+                </div>
+              </div>
+            </div>
+            <div style="padding:0 14px 14px;display:flex;flex-direction:column;gap:10px;">
+              <div style="border:1.5px solid {{ termsBorderColor }};border-radius:7px;padding:8px 10px;">
+                <label style="display:flex;align-items:flex-start;gap:9px;cursor:pointer;">
+                  <input type="checkbox" checked="{{ termsChecked }}" onchange="{{ onTermsChange }}" style="width:15px;height:15px;margin-top:2px;accent-color:#2563eb;flex-shrink:0;"/>
+                  <span style="font-size:12.5px;color:#374151;">By checking this box, I accept the <a href="#" style="color:#2563eb;text-decoration:underline;">terms and conditions</a></span>
+                </label>
+                <div style="display:{{ termsAlertDisplay }};align-items:center;gap:6px;margin-top:6px;"><span style="font-size:12px;">⚠️</span><span style="font-size:12px;color:#ef4444;font-weight:500;">You must accept the terms and conditions to proceed.</span></div>
+              </div>
+              <label style="display:flex;align-items:flex-start;gap:9px;cursor:pointer;">
+                <input type="checkbox" checked style="width:15px;height:15px;margin-top:2px;accent-color:#2563eb;flex-shrink:0;"/>
+                <span style="font-size:12.5px;color:#374151;">I want to receive ticket alert and promotional material from time to time, we respect your privacy, read our <a href="#" style="color:#2563eb;text-decoration:underline;">privacy policy</a>.</span>
+              </label>
+            </div>
+            <div style="padding:0 14px 14px;">
+              <div style="border:1px solid {{ simBdr }};background:{{ simBg }};border-radius:7px;padding:10px 12px;display:flex;align-items:center;justify-content:space-between;gap:10px;">
+                <span style="font-size:12px;font-weight:600;color:{{ simCol }};">{{ simLabel }}</span>
+                <button onclick="{{ toggleSimulate }}" style="padding:4px 12px;font-size:11px;font-weight:700;border-radius:20px;border:1.5px solid {{ simBdr }};background:#fff;color:{{ simCol }};cursor:pointer;flex-shrink:0;">Toggle</button>
+              </div>
+              <button onclick="{{ submitPayment }}" style="width:100%;padding:13px;background:#2563eb;color:#fff;border-radius:7px;font-size:15px;font-weight:700;cursor:pointer;border:none;">Submit Payment</button>
+            </div>
+            <div style="padding:0 14px 16px;text-align:center;">
+              <div style="display:inline-flex;align-items:center;gap:5px;border:2px solid #16a34a;border-radius:6px;padding:5px 12px;">
+                <span style="font-size:14px;">🔒</span>
+                <span style="font-size:11px;font-weight:700;color:#16a34a;letter-spacing:.5px;">SECURE</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 115% Guarantee -->
+        <div style="border:1.5px solid #fbbf24;border-radius:10px;padding:18px 20px;background:#fffbeb;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+            <span style="font-size:18px;">🛡️</span>
+            <div style="font-size:14px;font-weight:700;color:#92400e;">115% Guarantee</div>
+          </div>
+          <div style="font-size:13px;color:#78350f;line-height:1.7;">In the highly unlikely case you do not receive the tickets you ordered, we will refund 100% of your money back, plus we will offer you a credit worth 15% of your original purchase towards another match.</div>
+          <div style="font-size:11.5px;color:#b45309;margin-top:8px;font-style:italic;">*Restrictions may apply, see the full "115% guarantee" terms here.</div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT COLUMN -->
+      <aside class="rsticky co-aside" style="position:sticky;top:70px;display:flex;flex-direction:column;gap:16px;">
+
+        <!-- Your tickets -->
+        <div style="background:#fff;border-radius:10px;border:1px solid #e2e8f0;overflow:hidden;">
+          <div style="padding:14px 18px;border-bottom:1px solid #f1f5f9;">
+            <div style="font-size:15px;font-weight:700;color:#0f172a;margin-bottom:10px;">Your tickets</div>
+            <div style="display:flex;gap:12px;align-items:flex-start;">
+              <div style="background:#ef4444;color:#fff;border-radius:6px;padding:6px 8px;text-align:center;flex-shrink:0;min-width:44px;">
+                <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;">MAY</div>
+                <div style="font-size:20px;font-weight:700;line-height:1;">02</div>
+                <div style="font-size:9px;font-weight:600;">2023</div>
+              </div>
+              <div style="flex:1;min-width:0;">
+                <div style="font-size:14px;font-weight:700;color:#0f172a;">Arsenal <span style="font-weight:400;color:#64748b;">vs</span> Chelsea</div>
+                <div style="display:flex;align-items:center;gap:4px;margin:2px 0;"><span style="font-size:10px;">⚽</span><span style="font-size:11px;font-weight:600;color:#2563eb;text-transform:uppercase;letter-spacing:.3px;">English Premier League Semi-Finals</span></div>
+                <div style="font-size:11.5px;color:#64748b;">Emirates Stadium, London, United Kingdom</div>
+                <div style="font-size:11.5px;color:#64748b;">Tue · 20:00</div>
+              </div>
+            </div>
+          </div>
+          <div style="border-left:3px solid #ef4444;margin:12px 14px;padding:10px 12px;background:#fef2f2;border-radius:0 6px 6px 0;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+              <div style="font-size:13px;font-weight:700;color:#0f172a;">Short side upper tier</div>
+              <div style="text-align:right;"><span style="font-size:16px;font-weight:700;color:#0f172a;">£250</span><span style="font-size:11px;color:#64748b;margin-left:2px;">each</span></div>
+            </div>
+            <div style="font-size:12px;color:#64748b;margin-bottom:6px;">Row 16 · 2 tickets</div>
+            <div style="display:flex;gap:5px;">
+              <span style="font-size:10px;">🛡️</span><span style="font-size:10px;">👑</span><span style="font-size:10px;">📄</span>
+            </div>
+          </div>
+          <div class="co-rows" style="padding:0 18px 14px;display:flex;flex-direction:column;gap:0;">
+            <div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid #f8fafc;font-size:13px;"><span style="color:#64748b;font-weight:500;">Ticket format:</span><span style="color:#0f172a;font-weight:600;">eTickets</span></div>
+            <div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid #f8fafc;font-size:13px;"><span style="color:#64748b;font-weight:500;">Split option:</span><span style="color:#0f172a;font-weight:600;">2 or 4 tickets</span></div>
+            <div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid #f8fafc;font-size:13px;"><span style="color:#64748b;font-weight:500;">Delivery:</span><span style="color:#0f172a;font-weight:600;text-align:right;max-width:160px;">Download 1–3 days before the match</span></div>
+            <div style="display:flex;justify-content:space-between;padding:7px 0;font-size:13px;"><span style="color:#64748b;font-weight:500;flex-shrink:0;">Seating arrangement (grouping):</span><span style="color:#0f172a;font-weight:600;text-align:right;margin-left:8px;">Consecutive (together)</span></div>
+          </div>
+        </div>
+
+        <!-- Restrictions -->
+        <div class="co-extra" style="background:#fff;border-radius:10px;border:1px solid #e2e8f0;overflow:hidden;">
+          <button onclick="{{ toggleRestrictions }}" style="width:100%;display:flex;justify-content:space-between;align-items:center;padding:13px 18px;font-size:14px;font-weight:600;color:#0f172a;background:none;border:none;cursor:pointer;">
+            <span>Restrictions</span>
+            <span style="font-size:16px;color:#64748b;">{{ restrictionsIcon }}</span>
+          </button>
+          <sc-if value="{{ restrictionsOpen }}" hint-placeholder-val="{{ false }}">
+            <div style="padding:0 18px 14px;border-top:1px solid #f1f5f9;">
+              <ul style="margin:10px 0 0;padding-left:16px;font-size:13px;color:#374151;line-height:1.8;">
+                <li>Restrictions text</li>
+                <li>International deliveries are highly not recommended and we offer several local delivery methods (in the country &amp; city of event) that can fit your requirements easily.</li>
+              </ul>
+            </div>
+          </sc-if>
+        </div>
+
+        <!-- Inclusions -->
+        <div class="co-extra" style="background:#fff;border-radius:10px;border:1px solid #e2e8f0;overflow:hidden;">
+          <button onclick="{{ toggleInclusions }}" style="width:100%;display:flex;justify-content:space-between;align-items:center;padding:13px 18px;font-size:14px;font-weight:600;color:#0f172a;background:none;border:none;cursor:pointer;">
+            <span>Inclusions</span>
+            <span style="font-size:16px;color:#64748b;">{{ inclusionsIcon }}</span>
+          </button>
+          <sc-if value="{{ inclusionsOpen }}" hint-placeholder-val="{{ false }}">
+            <div style="padding:0 18px 14px;border-top:1px solid #f1f5f9;">
+              <ul style="margin:10px 0 0;padding-left:16px;font-size:13px;color:#374151;line-height:1.8;">
+                <li>Inclusions text</li>
+                <li>International deliveries are highly not recommended and we offer several local delivery methods (in the country &amp; city of event) that can fit your requirements easily.</li>
+              </ul>
+            </div>
+          </sc-if>
+        </div>
+
+        <!-- Price -->
+        <div class="co-extra" style="background:#fff;border-radius:10px;border:1px solid #e2e8f0;padding:16px 18px;">
+          <div style="font-size:15px;font-weight:700;color:#0f172a;margin-bottom:12px;">Price</div>
+          <div style="font-size:12px;font-weight:600;color:#374151;margin-bottom:7px;">Select payment currency</div>
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:5px;">
+            <select onclick="{{ stopProp }}" style="padding:7px 10px;border:1.5px solid #e2e8f0;border-radius:6px;font-size:13px;font-weight:600;color:#0f172a;background:#fff;outline:none;cursor:pointer;">
+              <option value="GBP">GBP</option>
+              <option value="EUR">EUR</option>
+              <option value="USD">USD</option>
+              <option value="CAD">CAD</option>
+            </select>
+            <div style="font-size:12px;color:#64748b;">Applicable exchange rate<br/><strong style="color:#0f172a;">1 GBP = 1.13 EUR</strong></div>
+          </div>
+          <div style="margin-bottom:4px;"><a href="#" style="font-size:12px;color:#2563eb;text-decoration:underline;">How are fees calculated?</a></div>
+          <div style="border-top:1px solid #f1f5f9;margin:10px 0;"></div>
+          <div class="dotted-row"><span>Tickets</span><span>2 × £250.00</span></div>
+          <div class="dotted-row"><span>Total Fees*</span><span>2 × £40.80</span></div>
+          <div class="dotted-row"><span>115% Guarantee <span style="color:#2563eb;cursor:pointer;font-size:11px;">ⓘ</span></span><span style="color:#16a34a;font-weight:600;">Free</span></div>
+          <div class="dotted-row"><span>Promo code</span><span>£0</span></div>
+          <div style="display:flex;gap:8px;margin:8px 0 12px;">
+            <input type="text" placeholder="Promo Code" style="flex:1;padding:8px 12px;border:1.5px solid #e2e8f0;border-radius:6px;font-size:13px;outline:none;"/>
+            <button style="padding:8px 14px;border:1.5px solid #0f172a;border-radius:6px;font-size:13px;font-weight:600;color:#0f172a;background:#fff;cursor:pointer;">Apply</button>
+          </div>
+          <div style="border-top:1.5px solid #0f172a;margin-bottom:8px;"></div>
+          <div style="display:flex;justify-content:space-between;align-items:baseline;">
+            <span style="font-size:16px;font-weight:800;color:#0f172a;letter-spacing:-.3px;">TOTAL</span>
+            <span style="font-size:20px;font-weight:800;color:#0f172a;">£481.60</span>
+          </div>
+          <div style="font-size:11px;color:#64748b;margin-top:5px;">*Include booking fee, handling, delivery and applicable VAT</div>
+        </div>
+
+      </aside>
+    </div>
+  </main>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = {
+    billingModal: false, billingAdded: false,
+    deliveryMode: 'electronic',
+    electronicModal: false, electronicAdded: false,
+    courierModal: false, courierAdded: false,
+    restrictionsOpen: false,
+    inclusionsOpen: false,
+    termsAccepted: false,
+    termsError: false,
+    simulateDecline: false,
+  };
+
+  renderVals() {
+    const {
+      billingModal, billingAdded,
+      deliveryMode,
+      electronicModal, electronicAdded,
+      courierModal, courierAdded,
+      restrictionsOpen, inclusionsOpen,
+      termsAccepted, termsError,
+      simulateDecline,
+    } = this.state;
+
+    const dm = deliveryMode;
+
+    return {
+      billingModal, electronicModal, courierModal,
+      billingAdded,
+      billingNotAdded: !billingAdded,
+      isElectronic: dm === 'electronic',
+      isCourier:    dm === 'courier',
+      isBoxoffice:  dm === 'boxoffice',
+      electronicAdded, electronicNotAdded: !electronicAdded,
+      courierAdded,    courierNotAdded:    !courierAdded,
+      restrictionsOpen, restrictionsIcon: restrictionsOpen ? '∧' : '∨',
+      inclusionsOpen,   inclusionsIcon:   inclusionsOpen  ? '∧' : '∨',
+
+      // Delivery tab styles
+      dElBg:  dm==='electronic' ? '#0f172a' : '#fff',
+      dElCol: dm==='electronic' ? '#fff'    : '#64748b',
+      dElBdr: dm==='electronic' ? '#0f172a' : '#e2e8f0',
+      dCoBg:  dm==='courier'    ? '#0f172a' : '#fff',
+      dCoCol: dm==='courier'    ? '#fff'    : '#64748b',
+      dCoBdr: dm==='courier'    ? '#0f172a' : '#e2e8f0',
+      dBoBg:  dm==='boxoffice'  ? '#0f172a' : '#fff',
+      dBoCol: dm==='boxoffice'  ? '#fff'    : '#64748b',
+      dBoBdr: dm==='boxoffice'  ? '#0f172a' : '#e2e8f0',
+
+      setDeliveryElectronic: () => this.setState({ deliveryMode: 'electronic' }),
+      setDeliveryCourier:    () => this.setState({ deliveryMode: 'courier' }),
+      setDeliveryBoxoffice:  () => this.setState({ deliveryMode: 'boxoffice' }),
+
+      openBillingModal:    () => this.setState({ billingModal: true }),
+      closeBillingModal:   () => this.setState({ billingModal: false }),
+      saveBilling:         () => this.setState({ billingModal: false, billingAdded: true }),
+
+      openElectronicModal:  () => this.setState({ electronicModal: true }),
+      closeElectronicModal: () => this.setState({ electronicModal: false }),
+      saveElectronic:       () => this.setState({ electronicModal: false, electronicAdded: true }),
+
+      openCourierModal:  () => this.setState({ courierModal: true }),
+      closeCourierModal: () => this.setState({ courierModal: false }),
+      saveCourier:       () => this.setState({ courierModal: false, courierAdded: true }),
+
+      toggleRestrictions: () => this.setState({ restrictionsOpen: !restrictionsOpen }),
+      toggleInclusions:   () => this.setState({ inclusionsOpen:   !inclusionsOpen }),
+
+      termsAccepted,
+      termsError,
+      termsChecked: termsAccepted ? 'checked' : undefined,
+      onTermsChange: () => this.setState({ termsAccepted: !termsAccepted, termsError: false }),
+      simulateDecline,
+      toggleSimulate: () => this.setState({ simulateDecline: !simulateDecline }),
+      simBg:  simulateDecline ? '#fee2e2' : '#f0fdf4',
+      simCol: simulateDecline ? '#991b1b' : '#166534',
+      simBdr: simulateDecline ? '#fca5a5' : '#bbf7d0',
+      simLabel: simulateDecline ? '✕ Simulate: Payment declined' : '✓ Simulate: Payment approved',
+      submitPayment: () => {
+        if (!this.state.termsAccepted) {
+          this.setState({ termsError: true });
+          return;
+        }
+        if (this.state.simulateDecline) {
+          window.location.href = 'payment-declined.dc.html?reason=0';
+        } else {
+          window.location.href = 'confirmation.dc.html';
+        }
+      },
+      termsBorderColor: termsError ? '#ef4444' : '#e2e8f0',
+      termsAlertDisplay: termsError ? 'flex' : 'none',
+
+      stopProp: (e) => e.stopPropagation(),
+    };
+  }
+}
+</script>
+</body>
+</html>

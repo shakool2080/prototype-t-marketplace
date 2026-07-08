@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    .sb-wrap { position: relative; flex: 1; max-width: 500px; }
+    .sb-input-row { background:#1e293b; border:1px solid #334155; border-radius:7px; display:flex; align-items:center; padding:0 12px; gap:8px; height:38px; }
+    .sb-input { background:none; border:none; outline:none; color:#fff; font-size:14px; width:100%; font-family:inherit; }
+    .sb-input::placeholder { color:#64748b; }
+    .sb-drop { position:fixed; background:#fff; border-radius:10px; box-shadow:0 8px 32px rgba(0,0,0,.18); overflow:hidden; z-index:9999; max-height:480px; overflow-y:auto; }
+    .sb-section-hd { display:flex; align-items:center; gap:7px; padding:12px 16px 6px; font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.6px; color:#2563eb; }
+    .sb-divider { height:1px; background:#f1f5f9; margin:0 16px; }
+    .sb-event { padding:10px 16px; cursor:pointer; border-bottom:1px solid #f8fafc; }
+    .sb-event:hover { background:#f8fafc; }
+    .sb-event-title { font-size:14px; color:#0f172a; margin-bottom:2px; }
+    .sb-event-meta { font-size:12px; color:#94a3b8; }
+    .sb-row { display:flex; align-items:center; padding:10px 16px; cursor:pointer; border-bottom:1px solid #f8fafc; gap:10px; }
+    .sb-row:hover { background:#f8fafc; }
+    .sb-row-name { font-size:14px; font-weight:600; color:#0f172a; flex:1; }
+    .sb-badge { width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+    .sb-arrow { color:#94a3b8; font-size:16px; }
+  </style>
+</helmet>
+
+<div class="sb-wrap" ref="{{ setWrap }}" style="{{ wrapStyle }}">
+  <div class="sb-input-row">
+    <span style="color:#64748b;font-size:14px;">🔍</span>
+    <input class="sb-input" type="search" placeholder="Search teams, competitions, venues..." value="{{ query }}" onInput="{{ onInput }}" onFocus="{{ onFocus }}" onBlur="{{ onBlur }}" onKeyDown="{{ onKeyDown }}"/>
+  </div>
+  <sc-if value="{{ showDrop }}" hint-placeholder-val="{{ false }}">
+    {{ dropEl }}
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { query: '', show: false };
+  _wrapRef = null;
+  _blurTimer = null;
+  _setWrap = el => { this._wrapRef = el; };
+
+  EVENTS = [
+    { title: 'Arsenal vs Chelsea',           bold: ['Arsenal','Chelsea'],           meta: 'Sat 15 Feb 2027 · 19:30 · Emirates Stadium, London' },
+    { title: 'Arsenal vs Manchester City',   bold: ['Arsenal','Manchester City'],   meta: 'Sat 22 Feb 2027 · 20:00 · Emirates Stadium, London' },
+    { title: 'Arsenal vs Real Madrid',       bold: ['Arsenal','Real Madrid'],       meta: 'Wed 08 Mar 2027 · 20:00 · Emirates Stadium, London' },
+    { title: 'Arsenal vs Tottenham Hotspur', bold: ['Arsenal','Tottenham Hotspur'], meta: 'Sun 06 Apr 2027 · 14:00 · Emirates Stadium, London' },
+    { title: 'Arsenal vs Liverpool',         bold: ['Arsenal','Liverpool'],         meta: 'Sat 03 May 2027 · 12:30 · Emirates Stadium, London' },
+    { title: 'Chelsea vs Nottingham Forest', bold: ['Chelsea','Nottingham Forest'], meta: 'Sat 15 Feb 2027 · 15:00 · Stamford Bridge, London' },
+    { title: 'Real Madrid vs Barcelona',     bold: ['Real Madrid','Barcelona'],     meta: 'Sun 23 Mar 2027 · 21:00 · Santiago Bernabéu, Madrid' },
+    { title: 'Liverpool vs Manchester City', bold: ['Liverpool','Manchester City'], meta: 'Sun 13 Apr 2027 · 16:30 · Anfield, Liverpool' },
+  ];
+
+  TEAMS = [
+    { name:'Arsenal',          color:'#ef0107', abbr:'AFC',  textColor:'#fff' },
+    { name:'Chelsea',          color:'#034694', abbr:'CFC',  textColor:'#fff' },
+    { name:'Liverpool',        color:'#C8102E', abbr:'LFC',  textColor:'#fff' },
+    { name:'Manchester City',  color:'#6CADDF', abbr:'MCI',  textColor:'#fff' },
+    { name:'Manchester United',color:'#DA291C', abbr:'MUN',  textColor:'#fff' },
+    { name:'Barcelona',        color:'#004D98', abbr:'FCB',  textColor:'#fff' },
+    { name:'Real Madrid',      color:'#fff',    abbr:'RMCF', textColor:'#0f172a' },
+    { name:'Tottenham Hotspur',color:'#001C58', abbr:'TOT',  textColor:'#fff' },
+  ];
+
+  VENUES = [
+    { name:'Emirates Stadium, London' },
+    { name:'Stamford Bridge, London' },
+    { name:'Anfield, Liverpool' },
+    { name:'Old Trafford, Manchester' },
+    { name:'Santiago Bernabéu, Madrid' },
+    { name:'Camp Nou, Barcelona' },
+    { name:'Etihad Stadium, Manchester' },
+  ];
+
+  CITIES = [
+    { name:'London, United Kingdom' },
+    { name:'Manchester, United Kingdom' },
+    { name:'Liverpool, United Kingdom' },
+    { name:'Madrid, Spain' },
+    { name:'Barcelona, Spain' },
+    { name:'Birmingham, United Kingdom' },
+  ];
+
+  filter(list, q, field) {
+    return list.filter(i => (i[field]||i.name||'').toLowerCase().includes(q.toLowerCase()));
+  }
+
+  boldify(text, terms) {
+    let parts = [{ t: text, b: false }];
+    terms.forEach(term => {
+      parts = parts.flatMap(p => {
+        if (p.b) return [p];
+        const idx = p.t.toLowerCase().indexOf(term.toLowerCase());
+        if (idx === -1) return [p];
+        return [
+          { t: p.t.slice(0, idx), b: false },
+          { t: p.t.slice(idx, idx + term.length), b: true },
+          { t: p.t.slice(idx + term.length), b: false },
+        ].filter(x => x.t);
+      });
+    });
+    return React.createElement('span', null,
+      ...parts.map((p, i) => p.b
+        ? React.createElement('strong', { key: i }, p.t)
+        : React.createElement('span', { key: i }, p.t)
+      )
+    );
+  }
+
+  getDropPos() {
+    if (!this._wrapRef) return { top: 64, left: 0, width: 480 };
+    const r = this._wrapRef.getBoundingClientRect();
+    return { top: r.bottom + 6, left: r.left, width: Math.max(r.width, 420) };
+  }
+
+  renderVals() {
+    const { query, show } = this.state;
+    const q = query.trim();
+    const showDrop = show && q.length > 0;
+
+    const evts    = q ? this.filter(this.EVENTS,  q, 'title') : this.EVENTS.slice(0,3);
+    const teams   = q ? this.filter(this.TEAMS,   q, 'name')  : this.TEAMS.slice(0,3);
+    const venues  = q ? this.filter(this.VENUES,  q, 'name')  : this.VENUES.slice(0,2);
+    const cities  = q ? this.filter(this.CITIES,  q, 'name')  : this.CITIES.slice(0,2);
+
+    const pos = showDrop ? this.getDropPos() : {};
+
+    const dropEl = showDrop ? React.createElement('div', {
+      className: 'sb-drop',
+      style: { top: pos.top, left: pos.left, width: pos.width },
+      onMouseDown: e => e.preventDefault(),
+    },
+      // Events
+      evts.length > 0 && React.createElement('div', null,
+        React.createElement('div', { className: 'sb-section-hd' },
+          React.createElement('span', null, '📅'),
+          React.createElement('span', null, 'Events')
+        ),
+        React.createElement('div', { className: 'sb-divider' }),
+        ...evts.slice(0,3).map((ev, i) =>
+          React.createElement('div', { key: i, className: 'sb-event', onClick: () => { window.location.href = 'event.dc.html'; } },
+            React.createElement('div', { className: 'sb-event-title' }, this.boldify(ev.title, q ? [q] : ev.bold)),
+            React.createElement('div', { className: 'sb-event-meta' }, ev.meta)
+          )
+        )
+      ),
+      // Teams
+      teams.length > 0 && React.createElement('div', null,
+        React.createElement('div', { className: 'sb-section-hd' },
+          React.createElement('span', null, '👥'),
+          React.createElement('span', null, 'Teams')
+        ),
+        React.createElement('div', { className: 'sb-divider' }),
+        ...teams.slice(0,3).map((t, i) =>
+          React.createElement('div', { key: i, className: 'sb-row', onClick: () => { window.location.href = 'performer.dc.html'; } },
+            React.createElement('div', { className: 'sb-badge', style: { background: t.color, border: t.color === '#fff' ? '1px solid #e2e8f0' : 'none' } },
+              React.createElement('span', { style: { fontSize: 9, fontWeight: 800, color: t.textColor } }, t.abbr)
+            ),
+            React.createElement('span', { className: 'sb-row-name' }, this.boldify(t.name, q ? [q] : [])),
+            React.createElement('span', { className: 'sb-arrow' }, '›')
+          )
+        )
+      ),
+      // Venues
+      venues.length > 0 && React.createElement('div', null,
+        React.createElement('div', { className: 'sb-section-hd' },
+          React.createElement('span', null, '📍'),
+          React.createElement('span', null, 'Venues')
+        ),
+        React.createElement('div', { className: 'sb-divider' }),
+        ...venues.slice(0,2).map((v, i) =>
+          React.createElement('div', { key: i, className: 'sb-row', onClick: () => { window.location.href = 'search.dc.html'; } },
+            React.createElement('span', { className: 'sb-row-name' }, this.boldify(v.name, q ? [q] : [])),
+            React.createElement('span', { className: 'sb-arrow' }, '›')
+          )
+        )
+      ),
+      // Cities
+      cities.length > 0 && React.createElement('div', null,
+        React.createElement('div', { className: 'sb-section-hd' },
+          React.createElement('span', null, '🏙️'),
+          React.createElement('span', null, 'Cities')
+        ),
+        React.createElement('div', { className: 'sb-divider' }),
+        ...cities.slice(0,2).map((c, i) =>
+          React.createElement('div', { key: i, className: 'sb-row', onClick: () => { window.location.href = 'city.dc.html'; } },
+            React.createElement('span', { className: 'sb-row-name' }, this.boldify(c.name, q ? [q] : [])),
+            React.createElement('span', { className: 'sb-arrow' }, '›')
+          )
+        )
+      )
+    ) : null;
+
+    return {
+      query,
+      showDrop,
+      dropEl,
+      wrapStyle: '',
+      setWrap:   this._setWrap,
+      onInput:   e => this.setState({ query: e.target.value }),
+      onFocus:   () => this.setState({ show: true }),
+      onBlur:    () => { this._blurTimer = setTimeout(() => this.setState({ show: false }), 150); },
+      onKeyDown: e => {
+        if (e.key === 'Escape') { this.setState({ show: false, query: '' }); }
+        if (e.key === 'Enter')  { this.setState({ show: false }); window.location.href = 'search.dc.html'; }
+      },
+    };
+  }
+}
+</script>
+</body>
+</html>

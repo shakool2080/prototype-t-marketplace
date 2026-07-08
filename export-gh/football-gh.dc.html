@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body { margin: 0; font-family: 'Inter', system-ui, sans-serif; color: #0f172a; }
+    a { text-decoration: none; color: inherit; }
+    button { font-family: inherit; cursor: pointer; border: none; background: none; }
+    input, select { font-family: inherit; }
+  </style>
+</helmet>
+
+<div style="display:flex;flex-direction:column;min-height:100vh;background:#f8fafc;">
+
+  <header style="background:#0f172a;color:#fff;position:sticky;top:0;z-index:100;box-shadow:0 1px 4px rgba(0,0,0,.3);">
+    <div style="display:flex;align-items:center;padding:0 24px;height:56px;gap:16px;max-width:1400px;margin:0 auto;">
+      <a href="../" style="font-size:18px;font-weight:700;color:#fff;white-space:nowrap;flex-shrink:0;letter-spacing:-.3px;">TicketMarketplace</a>
+      <div style="flex:1;max-width:500px;background:#1e293b;border:1px solid #334155;border-radius:7px;display:flex;align-items:center;padding:0 12px;gap:8px;height:38px;"><span style="color:#64748b;font-size:14px;">🔍</span><input type="search" placeholder="Search teams, competitions, venues..." style="background:none;border:none;outline:none;color:#fff;font-size:14px;width:100%;"/></div>
+      <button style="display:flex;align-items:center;gap:6px;color:#fff;font-size:14px;padding:7px 14px;border:1px solid #334155;border-radius:6px;margin-left:auto;background:none;white-space:nowrap;flex-shrink:0;">👤 Account ☰</button>
+    </div>
+    <div style="background:#1e293b;border-top:1px solid #0f172a;overflow-x:auto;scrollbar-width:none;">
+      <div style="display:flex;padding:0 24px;max-width:1400px;margin:0 auto;white-space:nowrap;">
+        <a href="./" style="display:block;padding:10px 14px;font-size:13px;font-weight:600;color:#fff;border-bottom:2px solid #22c55e;">Football ▾</a>
+        <a href="./" style="display:block;padding:10px 14px;font-size:13px;font-weight:500;color:#94a3b8;">Rugby</a>
+        <a href="./" style="display:block;padding:10px 14px;font-size:13px;font-weight:500;color:#94a3b8;">Tennis</a>
+        <a href="./" style="display:block;padding:10px 14px;font-size:13px;font-weight:500;color:#94a3b8;">Cricket</a>
+        <a href="./" style="display:block;padding:10px 14px;font-size:13px;font-weight:500;color:#94a3b8;">Basketball</a>
+        <a href="./" style="display:block;padding:10px 14px;font-size:13px;font-weight:500;color:#94a3b8;">American Football</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <div style="background:linear-gradient(135deg,#064e3b 0%,#065f46 50%,#0f172a 100%);padding:40px 24px 36px;">
+    <div style="max-width:1400px;margin:0 auto;">
+      <div style="font-size:13px;color:rgba(255,255,255,.5);margin-bottom:12px;"><a href="../" style="color:rgba(255,255,255,.5);">Home</a> › Football</div>
+      <div style="display:flex;align-items:center;gap:16px;margin-bottom:10px;">
+        <div style="width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0;">⚽</div>
+        <h1 style="font-size:36px;font-weight:800;color:#fff;margin:0;letter-spacing:-.5px;">Football</h1>
+      </div>
+      <p style="font-size:15px;color:rgba(255,255,255,.65);margin:0;max-width:560px;line-height:1.7;">Buy and sell tickets for football matches worldwide. From Premier League to Champions League — find the best seats at the best prices.</p>
+    </div>
+  </div>
+
+  <main style="flex:1;max-width:1400px;margin:0 auto;width:100%;padding:36px 24px;">
+
+    <!-- Popular competitions -->
+    <h2 style="font-size:20px;font-weight:700;color:#0f172a;margin:0 0 18px;">Popular Competitions</h2>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:40px;">
+
+      <a href="english-premier-league/" style="display:flex;align-items:center;gap:14px;padding:18px;background:#fff;border:1px solid #e2e8f0;border-radius:10px;color:inherit;">
+        <div style="width:52px;height:52px;border-radius:8px;background:#3d0099;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span style="font-size:11px;font-weight:800;color:#fff;letter-spacing:.5px;">PL</span></div>
+        <div style="flex:1;min-width:0;"><div style="font-size:15px;font-weight:700;color:#0f172a;">English Premier League</div><div style="font-size:12px;color:#64748b;margin-top:2px;">20 Teams · England</div></div>
+        <span style="color:#94a3b8;font-size:18px;flex-shrink:0;">›</span>
+      </a>
+
+      <a href="./" style="display:flex;align-items:center;gap:14px;padding:18px;background:#fff;border:1px solid #e2e8f0;border-radius:10px;color:inherit;">
+        <div style="width:52px;height:52px;border-radius:8px;background:#f59e0b;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span style="font-size:11px;font-weight:800;color:#fff;letter-spacing:.5px;">UCL</span></div>
+        <div style="flex:1;min-width:0;"><div style="font-size:15px;font-weight:700;color:#0f172a;">UEFA Champions League</div><div style="font-size:12px;color:#64748b;margin-top:2px;">32 Teams · Europe</div></div>
+        <span style="color:#94a3b8;font-size:18px;flex-shrink:0;">›</span>
+      </a>
+
+      <a href="./" style="display:flex;align-items:center;gap:14px;padding:18px;background:#fff;border:1px solid #e2e8f0;border-radius:10px;color:inherit;">
+        <div style="width:52px;height:52px;border-radius:8px;background:#ef4444;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span style="font-size:11px;font-weight:800;color:#fff;letter-spacing:.5px;">LL</span></div>
+        <div style="flex:1;min-width:0;"><div style="font-size:15px;font-weight:700;color:#0f172a;">La Liga</div><div style="font-size:12px;color:#64748b;margin-top:2px;">20 Teams · Spain</div></div>
+        <span style="color:#94a3b8;font-size:18px;flex-shrink:0;">›</span>
+      </a>
+
+      <a href="./" style="display:flex;align-items:center;gap:14px;padding:18px;background:#fff;border:1px solid #e2e8f0;border-radius:10px;color:inherit;">
+        <div style="width:52px;height:52px;border-radius:8px;background:#1d4ed8;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span style="font-size:11px;font-weight:800;color:#fff;letter-spacing:.5px;">BL1</span></div>
+        <div style="flex:1;min-width:0;"><div style="font-size:15px;font-weight:700;color:#0f172a;">Bundesliga</div><div style="font-size:12px;color:#64748b;margin-top:2px;">18 Teams · Germany</div></div>
+        <span style="color:#94a3b8;font-size:18px;flex-shrink:0;">›</span>
+      </a>
+
+      <a href="./" style="display:flex;align-items:center;gap:14px;padding:18px;background:#fff;border:1px solid #e2e8f0;border-radius:10px;color:inherit;">
+        <div style="width:52px;height:52px;border-radius:8px;background:#0ea5e9;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span style="font-size:11px;font-weight:800;color:#fff;letter-spacing:.5px;">SA</span></div>
+        <div style="flex:1;min-width:0;"><div style="font-size:15px;font-weight:700;color:#0f172a;">Serie A</div><div style="font-size:12px;color:#64748b;margin-top:2px;">20 Teams · Italy</div></div>
+        <span style="color:#94a3b8;font-size:18px;flex-shrink:0;">›</span>
+      </a>
+
+      <a href="./" style="display:flex;align-items:center;gap:14px;padding:18px;background:#fff;border:1px solid #e2e8f0;border-radius:10px;color:inherit;">
+        <div style="width:52px;height:52px;border-radius:8px;background:#16a34a;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span style="font-size:11px;font-weight:800;color:#fff;letter-spacing:.5px;">L1</span></div>
+        <div style="flex:1;min-width:0;"><div style="font-size:15px;font-weight:700;color:#0f172a;">Ligue 1</div><div style="font-size:12px;color:#64748b;margin-top:2px;">20 Teams · France</div></div>
+        <span style="color:#94a3b8;font-size:18px;flex-shrink:0;">›</span>
+      </a>
+
+      <a href="./" style="display:flex;align-items:center;gap:14px;padding:18px;background:#fff;border:1px solid #e2e8f0;border-radius:10px;color:inherit;">
+        <div style="width:52px;height:52px;border-radius:8px;background:#dc2626;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span style="font-size:11px;font-weight:800;color:#fff;letter-spacing:.5px;">FAC</span></div>
+        <div style="flex:1;min-width:0;"><div style="font-size:15px;font-weight:700;color:#0f172a;">FA Cup</div><div style="font-size:12px;color:#64748b;margin-top:2px;">English domestic cup · England</div></div>
+        <span style="color:#94a3b8;font-size:18px;flex-shrink:0;">›</span>
+      </a>
+
+      <a href="./" style="display:flex;align-items:center;gap:14px;padding:18px;background:#fff;border:1px solid #e2e8f0;border-radius:10px;color:inherit;">
+        <div style="width:52px;height:52px;border-radius:8px;background:#7c3aed;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span style="font-size:11px;font-weight:800;color:#fff;letter-spacing:.5px;">UEL</span></div>
+        <div style="flex:1;min-width:0;"><div style="font-size:15px;font-weight:700;color:#0f172a;">UEFA Europa League</div><div style="font-size:12px;color:#64748b;margin-top:2px;">32 Teams · Europe</div></div>
+        <span style="color:#94a3b8;font-size:18px;flex-shrink:0;">›</span>
+      </a>
+
+      <a href="./" style="display:flex;align-items:center;gap:14px;padding:18px;background:#fff;border:1px solid #e2e8f0;border-radius:10px;color:inherit;">
+        <div style="width:52px;height:52px;border-radius:8px;background:#0f172a;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span style="font-size:11px;font-weight:800;color:#fff;letter-spacing:.5px;">WC</span></div>
+        <div style="flex:1;min-width:0;"><div style="font-size:15px;font-weight:700;color:#0f172a;">FIFA World Cup</div><div style="font-size:12px;color:#64748b;margin-top:2px;">International · Global</div></div>
+        <span style="color:#94a3b8;font-size:18px;flex-shrink:0;">›</span>
+      </a>
+
+    </div>
+
+    <!-- Popular teams -->
+    <h2 style="font-size:20px;font-weight:700;color:#0f172a;margin:0 0 18px;">Popular Teams</h2>
+    <div style="display:flex;gap:20px;overflow-x:auto;padding-bottom:12px;scrollbar-width:none;margin-bottom:40px;">
+      <a href="english-premier-league/arsenal/" style="display:flex;flex-direction:column;align-items:center;gap:8px;text-decoration:none;flex-shrink:0;"><div style="width:68px;height:68px;border-radius:50%;background:#ef0107;display:flex;align-items:center;justify-content:center;"><svg viewBox="0 0 68 68" xmlns="http://www.w3.org/2000/svg" style="width:64px;height:64px;"><circle cx="34" cy="34" r="32" fill="#ef0107"/><text x="34" y="39" text-anchor="middle" font-family="Inter,sans-serif" font-size="15" font-weight="900" fill="#fff">AFC</text></svg></div><span style="font-size:12px;font-weight:600;color:#374151;white-space:nowrap;">Arsenal</span></a>
+      <a href="english-premier-league/arsenal/" style="display:flex;flex-direction:column;align-items:center;gap:8px;text-decoration:none;flex-shrink:0;"><div style="width:68px;height:68px;border-radius:50%;background:#034694;display:flex;align-items:center;justify-content:center;"><svg viewBox="0 0 68 68" xmlns="http://www.w3.org/2000/svg" style="width:64px;height:64px;"><circle cx="34" cy="34" r="32" fill="#034694"/><text x="34" y="39" text-anchor="middle" font-family="Inter,sans-serif" font-size="15" font-weight="900" fill="#fff">CFC</text></svg></div><span style="font-size:12px;font-weight:600;color:#374151;white-space:nowrap;">Chelsea</span></a>
+      <a href="english-premier-league/arsenal/" style="display:flex;flex-direction:column;align-items:center;gap:8px;text-decoration:none;flex-shrink:0;"><div style="width:68px;height:68px;border-radius:50%;background:#C8102E;display:flex;align-items:center;justify-content:center;"><svg viewBox="0 0 68 68" xmlns="http://www.w3.org/2000/svg" style="width:64px;height:64px;"><circle cx="34" cy="34" r="32" fill="#C8102E"/><text x="34" y="39" text-anchor="middle" font-family="Inter,sans-serif" font-size="15" font-weight="900" fill="#fff">LFC</text></svg></div><span style="font-size:12px;font-weight:600;color:#374151;white-space:nowrap;">Liverpool</span></a>
+      <a href="english-premier-league/arsenal/" style="display:flex;flex-direction:column;align-items:center;gap:8px;text-decoration:none;flex-shrink:0;"><div style="width:68px;height:68px;border-radius:50%;background:#DA291C;display:flex;align-items:center;justify-content:center;"><svg viewBox="0 0 68 68" xmlns="http://www.w3.org/2000/svg" style="width:64px;height:64px;"><circle cx="34" cy="34" r="32" fill="#DA291C"/><text x="34" y="39" text-anchor="middle" font-family="Inter,sans-serif" font-size="14" font-weight="900" fill="#fff">MUFC</text></svg></div><span style="font-size:12px;font-weight:600;color:#374151;white-space:nowrap;">Man United</span></a>
+      <a href="english-premier-league/arsenal/" style="display:flex;flex-direction:column;align-items:center;gap:8px;text-decoration:none;flex-shrink:0;"><div style="width:68px;height:68px;border-radius:50%;background:#6CADDF;display:flex;align-items:center;justify-content:center;"><svg viewBox="0 0 68 68" xmlns="http://www.w3.org/2000/svg" style="width:64px;height:64px;"><circle cx="34" cy="34" r="32" fill="#6CADDF"/><text x="34" y="39" text-anchor="middle" font-family="Inter,sans-serif" font-size="14" font-weight="900" fill="#fff">MCFC</text></svg></div><span style="font-size:12px;font-weight:600;color:#374151;white-space:nowrap;">Man City</span></a>
+      <a href="english-premier-league/arsenal/" style="display:flex;flex-direction:column;align-items:center;gap:8px;text-decoration:none;flex-shrink:0;"><div style="width:68px;height:68px;border-radius:50%;background:#004D98;display:flex;align-items:center;justify-content:center;"><svg viewBox="0 0 68 68" xmlns="http://www.w3.org/2000/svg" style="width:64px;height:64px;"><circle cx="34" cy="34" r="32" fill="#004D98"/><text x="34" y="39" text-anchor="middle" font-family="Inter,sans-serif" font-size="15" font-weight="900" fill="#fff">FCB</text></svg></div><span style="font-size:12px;font-weight:600;color:#374151;white-space:nowrap;">Barcelona</span></a>
+      <a href="english-premier-league/arsenal/" style="display:flex;flex-direction:column;align-items:center;gap:8px;text-decoration:none;flex-shrink:0;"><div style="width:68px;height:68px;border-radius:50%;background:#FEBE10;display:flex;align-items:center;justify-content:center;"><svg viewBox="0 0 68 68" xmlns="http://www.w3.org/2000/svg" style="width:64px;height:64px;"><circle cx="34" cy="34" r="32" fill="#FEBE10"/><text x="34" y="39" text-anchor="middle" font-family="Inter,sans-serif" font-size="15" font-weight="900" fill="#fff">BVB</text></svg></div><span style="font-size:12px;font-weight:600;color:#374151;white-space:nowrap;">Dortmund</span></a>
+      <a href="english-premier-league/arsenal/" style="display:flex;flex-direction:column;align-items:center;gap:8px;text-decoration:none;flex-shrink:0;"><div style="width:68px;height:68px;border-radius:50%;background:#ffffff;border:2px solid #e2e8f0;display:flex;align-items:center;justify-content:center;"><svg viewBox="0 0 68 68" xmlns="http://www.w3.org/2000/svg" style="width:64px;height:64px;"><circle cx="34" cy="34" r="32" fill="#ffffff" stroke="#e2e8f0" stroke-width="2"/><text x="34" y="39" text-anchor="middle" font-family="Inter,sans-serif" font-size="13" font-weight="900" fill="#0f172a">RMCF</text></svg></div><span style="font-size:12px;font-weight:600;color:#374151;white-space:nowrap;">Real Madrid</span></a>
+    </div>
+
+    <!-- Featured events -->
+    <h2 style="font-size:20px;font-weight:700;color:#0f172a;margin:0 0 18px;">Featured Matches</h2>
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <a href="english-premier-league/arsenal/arsenal-vs-chelsea/" style="display:flex;align-items:center;gap:14px;padding:14px 16px;background:#fff;border:1px solid #e2e8f0;border-radius:8px;color:inherit;"><div style="text-align:center;min-width:48px;flex-shrink:0;"><div style="font-size:10px;font-weight:600;text-transform:uppercase;color:#64748b;">Feb</div><div style="font-size:24px;font-weight:700;color:#ef0107;line-height:1.1;">15</div><div style="font-size:10px;color:#94a3b8;">Sat · 19:30</div></div><div style="flex:1;min-width:0;"><div style="font-size:14px;font-weight:600;color:#0f172a;margin-bottom:2px;">Arsenal vs Chelsea</div><div style="font-size:12px;color:#64748b;">English Premier League · Emirates Stadium, London</div></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px;flex-shrink:0;"><span style="font-size:11px;font-weight:600;padding:3px 8px;border-radius:4px;background:#fef3c7;color:#92400e;">Selling fast</span><div style="background:#16a34a;color:#fff;padding:7px 14px;border-radius:6px;font-size:13px;font-weight:600;">From £127</div></div></a>
+      <a href="english-premier-league/arsenal/arsenal-vs-chelsea/" style="display:flex;align-items:center;gap:14px;padding:14px 16px;background:#fff;border:1px solid #e2e8f0;border-radius:8px;color:inherit;"><div style="text-align:center;min-width:48px;flex-shrink:0;"><div style="font-size:10px;font-weight:600;text-transform:uppercase;color:#64748b;">Mar</div><div style="font-size:24px;font-weight:700;color:#ef0107;line-height:1.1;">08</div><div style="font-size:10px;color:#94a3b8;">Wed · 20:00</div></div><div style="flex:1;min-width:0;"><div style="font-size:14px;font-weight:600;color:#0f172a;margin-bottom:2px;">Arsenal vs Real Madrid</div><div style="font-size:12px;color:#64748b;">UEFA Champions League · Emirates Stadium, London</div></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px;flex-shrink:0;"><div style="background:#16a34a;color:#fff;padding:7px 14px;border-radius:6px;font-size:13px;font-weight:600;">From £220</div></div></a>
+      <a href="english-premier-league/arsenal/arsenal-vs-chelsea/" style="display:flex;align-items:center;gap:14px;padding:14px 16px;background:#fff;border:1px solid #e2e8f0;border-radius:8px;color:inherit;"><div style="text-align:center;min-width:48px;flex-shrink:0;"><div style="font-size:10px;font-weight:600;text-transform:uppercase;color:#64748b;">Apr</div><div style="font-size:24px;font-weight:700;color:#ef0107;line-height:1.1;">06</div><div style="font-size:10px;color:#94a3b8;">Sun · 14:00</div></div><div style="flex:1;min-width:0;"><div style="font-size:14px;font-weight:600;color:#0f172a;margin-bottom:2px;">Arsenal vs Tottenham Hotspur</div><div style="font-size:12px;color:#64748b;">English Premier League · Emirates Stadium, London</div></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px;flex-shrink:0;"><span style="font-size:11px;font-weight:600;padding:3px 8px;border-radius:4px;background:#fef3c7;color:#92400e;">Selling fast</span><div style="background:#16a34a;color:#fff;padding:7px 14px;border-radius:6px;font-size:13px;font-weight:600;">From £199</div></div></a>
+    </div>
+
+  </main>
+
+  <footer style="background:#0f172a;color:#94a3b8;padding:40px 24px 28px;margin-top:32px;">
+    <div style="max-width:1400px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;"><div style="font-size:17px;font-weight:700;color:#fff;">TicketMarketplace</div><p style="font-size:12px;color:#475569;margin:0;">© 2027 TicketMarketplace. All rights reserved.</p></div>
+  </footer>
+
+</div>
+</x-dc>
+<template id="__bundler_thumbnail"><svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg"><rect width="400" height="300" fill="#064e3b"/><text x="200" y="155" text-anchor="middle" font-family="sans-serif" font-size="48">⚽</text><text x="200" y="200" text-anchor="middle" font-family="sans-serif" font-size="18" font-weight="700" fill="#fff">Football</text></svg></template>
+</body>
+</html>

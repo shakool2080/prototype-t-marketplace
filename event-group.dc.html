@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body { margin: 0; font-family: 'Inter', system-ui, sans-serif; color: #0f172a; }
+    a { text-decoration: none; color: inherit; }
+    button { font-family: inherit; cursor: pointer; border: none; background: none; }
+    input, select { font-family: inherit; }
+    @media(max-width:768px){.rh{display:none!important}.rg1{display:block!important}.rfg{grid-template-columns:1fr 1fr!important}.rben{grid-template-columns:repeat(3,1fr)!important}}
+    @media(max-width:480px){.rfg{grid-template-columns:1fr!important}.rben{grid-template-columns:repeat(2,1fr)!important}}
+  </style>
+</helmet>
+
+<!-- Auth Modal -->
+<sc-if value="{{ authModal }}" hint-placeholder-val="{{ false }}">
+  <div onclick="{{ closeModal }}" style="position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:1000;display:flex;align-items:center;justify-content:center;padding:16px;">
+    <div style="background:#fff;border-radius:12px;width:100%;max-width:440px;position:relative;box-shadow:0 20px 60px rgba(0,0,0,.25);overflow:hidden;">
+      <div style="padding:28px 28px 0;">
+        <button onclick="{{ closeModalBtn }}" style="position:absolute;top:16px;right:16px;color:#94a3b8;font-size:22px;line-height:1;padding:4px;">×</button>
+        <div style="font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#94a3b8;margin-bottom:6px;">TicketMarketplace</div>
+        <h2 style="font-size:22px;font-weight:700;color:#0f172a;margin:0 0 4px;">Welcome</h2>
+        <p style="font-size:14px;color:#64748b;margin:0 0 20px;">Sign in to your account or continue as a guest</p>
+      </div>
+      <div style="display:flex;border-bottom:2px solid #f1f5f9;padding:0 28px;">
+        <button onclick="{{ tabSignIn }}" style="flex:1;padding:10px 0;font-size:14px;font-weight:{{ siWeight }};color:{{ siColor }};background:none;border:none;border-bottom:{{ siBorder }};cursor:pointer;margin-bottom:-2px;">Sign In</button>
+        <button onclick="{{ tabSignUp }}" style="flex:1;padding:10px 0;font-size:14px;font-weight:{{ suWeight }};color:{{ suColor }};background:none;border:none;border-bottom:{{ suBorder }};cursor:pointer;margin-bottom:-2px;">Sign Up</button>
+        <button onclick="{{ tabGuest }}" style="flex:1;padding:10px 0;font-size:14px;font-weight:{{ gWeight }};color:{{ gColor }};background:none;border:none;border-bottom:{{ gBorder }};cursor:pointer;margin-bottom:-2px;">Guest</button>
+      </div>
+      <div style="padding:24px 28px 28px;">
+        <sc-if value="{{ isSignIn }}" hint-placeholder-val="{{ true }}"><div><div style="margin-bottom:14px;"><label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:5px;">Email</label><input type="email" placeholder="you@example.com" style="width:100%;padding:10px 12px;border:1.5px solid #e2e8f0;border-radius:7px;font-size:14px;outline:none;"/></div><div style="margin-bottom:18px;"><label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:5px;">Password</label><input type="password" placeholder="••••••••" style="width:100%;padding:10px 12px;border:1.5px solid #e2e8f0;border-radius:7px;font-size:14px;outline:none;"/></div><button style="width:100%;padding:12px;background:#2563eb;color:#fff;border-radius:7px;font-size:15px;font-weight:600;cursor:pointer;">Sign In →</button></div></sc-if>
+        <sc-if value="{{ isSignUp }}" hint-placeholder-val="{{ false }}"><div><div style="margin-bottom:14px;"><label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:5px;">Full name</label><input type="text" placeholder="Your name" style="width:100%;padding:10px 12px;border:1.5px solid #e2e8f0;border-radius:7px;font-size:14px;outline:none;"/></div><div style="margin-bottom:14px;"><label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:5px;">Email</label><input type="email" placeholder="you@example.com" style="width:100%;padding:10px 12px;border:1.5px solid #e2e8f0;border-radius:7px;font-size:14px;outline:none;"/></div><div style="margin-bottom:18px;"><label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:5px;">Password</label><input type="password" placeholder="••••••••" style="width:100%;padding:10px 12px;border:1.5px solid #e2e8f0;border-radius:7px;font-size:14px;outline:none;"/></div><button style="width:100%;padding:12px;background:#2563eb;color:#fff;border-radius:7px;font-size:15px;font-weight:600;cursor:pointer;">Create Account →</button></div></sc-if>
+        <sc-if value="{{ isGuest }}" hint-placeholder-val="{{ false }}"><div><div style="margin-bottom:18px;"><label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:5px;">Email address</label><input type="email" placeholder="you@example.com" style="width:100%;padding:10px 12px;border:1.5px solid #e2e8f0;border-radius:7px;font-size:14px;outline:none;"/></div><a href="checkout.dc.html" style="display:block;text-align:center;padding:12px;background:#2563eb;color:#fff;border-radius:7px;font-size:15px;font-weight:600;">Continue as Guest →</a></div></sc-if>
+      </div>
+    </div>
+  </div>
+</sc-if>
+
+<!-- Mobile menu -->
+<sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
+  <div onclick="{{ closeMenu }}" style="position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:200;"></div>
+  <div style="position:fixed;top:0;right:0;width:280px;height:100vh;background:#fff;z-index:201;overflow-y:auto;display:flex;flex-direction:column;box-shadow:-2px 0 20px rgba(0,0,0,.15);">
+    <div style="padding:20px;border-bottom:1px solid #f1f5f9;display:flex;align-items:center;gap:12px;"><div style="width:44px;height:44px;border-radius:50%;background:#f1f5f9;display:flex;align-items:center;justify-content:center;font-size:20px;color:#94a3b8;flex-shrink:0;">👤</div><div style="flex:1;min-width:0;"><div style="font-size:14px;font-weight:600;color:#0f172a;">My Account</div><div style="font-size:12px;color:#94a3b8;">Not signed in</div></div><button onclick="{{ closeMenu }}" style="color:#94a3b8;font-size:22px;padding:4px;flex-shrink:0;line-height:1;">×</button></div>
+    <nav style="padding:8px 0;flex:1;"><button onclick="{{ openModal }}" style="display:flex;align-items:center;width:100%;padding:13px 20px;font-size:14px;color:#2563eb;font-weight:600;background:none;border:none;cursor:pointer;gap:10px;">🔑 Log in / Sign up</button><a href="my-account.dc.html" style="display:flex;align-items:center;padding:13px 20px;font-size:14px;color:#374151;gap:10px;">👤 Profile</a><a href="my-orders.dc.html" style="display:flex;align-items:center;padding:13px 20px;font-size:14px;color:#374151;gap:10px;">🎟️ Orders</a><a href="#" style="display:flex;align-items:center;padding:13px 20px;font-size:14px;color:#374151;gap:10px;">💰 Sales</a><a href="#" style="display:flex;align-items:center;padding:13px 20px;font-size:14px;color:#374151;gap:10px;">⚙️ Settings</a></nav>
+  </div>
+</sc-if>
+
+<div style="display:flex;flex-direction:column;min-height:100vh;background:#f8fafc;">
+
+  <!-- Header -->
+  <header style="background:#0f172a;color:#fff;position:sticky;top:0;z-index:100;box-shadow:0 1px 4px rgba(0,0,0,.3);">
+    <div style="display:flex;align-items:center;padding:0 24px;height:56px;gap:16px;max-width:1400px;margin:0 auto;">
+      <a href="home.dc.html" style="font-size:18px;font-weight:700;color:#fff;white-space:nowrap;flex-shrink:0;letter-spacing:-.3px;">TicketMarketplace</a>
+      <div class="rh" style="flex:1;max-width:500px;">
+        <dc-import name="SearchBox" hint-size="500px,38px" style="width:100%;max-width:500px;"></dc-import>
+      </div>
+      <button onclick="{{ openMenu }}" style="display:flex;align-items:center;gap:6px;color:#fff;font-size:14px;padding:7px 14px;border:1px solid #334155;border-radius:6px;margin-left:auto;background:none;white-space:nowrap;flex-shrink:0;">👤 ☰</button>
+    </div>
+    <div style="background:#1e293b;border-top:1px solid #0f172a;overflow-x:auto;scrollbar-width:none;">
+      <div style="display:flex;padding:0 24px;max-width:1400px;margin:0 auto;white-space:nowrap;">
+        <a href="search.dc.html" style="display:block;padding:10px 14px;font-size:13px;font-weight:600;color:#fff;border-bottom:2px solid #ef0107;">Premier League</a>
+        <a href="search.dc.html" style="display:block;padding:10px 14px;font-size:13px;font-weight:500;color:#94a3b8;">Spanish League</a>
+        <a href="search.dc.html" style="display:block;padding:10px 14px;font-size:13px;font-weight:500;color:#94a3b8;">English Competitions</a>
+        <a href="search.dc.html" style="display:block;padding:10px 14px;font-size:13px;font-weight:500;color:#94a3b8;">European Competitions</a>
+        <a href="search.dc.html" style="display:block;padding:10px 14px;font-size:13px;font-weight:500;color:#94a3b8;">International</a>
+        <a href="search.dc.html" style="display:block;padding:10px 14px;font-size:13px;font-weight:500;color:#94a3b8;">Last minute</a>
+        <a href="performer.dc.html" style="display:block;padding:10px 14px;font-size:13px;font-weight:500;color:#94a3b8;">Teams ▾</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero banner — Premier League -->
+  <div style="background:#2d0a4e;padding:24px 24px 20px;position:relative;overflow:hidden;">
+    <div style="position:absolute;inset:0;opacity:.07;font-size:180px;font-weight:900;color:#fff;letter-spacing:-8px;line-height:.85;padding:0 10px;pointer-events:none;user-select:none;overflow:hidden;">PL</div>
+    <div style="max-width:1400px;margin:0 auto;">
+      <div style="font-size:13px;color:rgba(255,255,255,.65);margin-bottom:12px;">
+        <a href="home.dc.html" style="color:rgba(255,255,255,.65);">Home</a> › <a href="search.dc.html" style="color:rgba(255,255,255,.65);">Football</a> › English Premier League
+      </div>
+      <div style="display:flex;align-items:center;gap:16px;">
+        <div style="width:60px;height:60px;flex-shrink:0;">
+          <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg" style="width:60px;height:60px;">
+            <circle cx="30" cy="30" r="29" fill="#fff" opacity=".15"/>
+            <circle cx="30" cy="30" r="27" fill="#fff"/>
+            <text x="30" y="20" text-anchor="middle" font-family="Inter,sans-serif" font-size="6.5" font-weight="700" fill="#2d0a4e">ENGLISH</text>
+            <text x="30" y="31" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" font-weight="900" fill="#2d0a4e">PREMIER</text>
+            <text x="30" y="42" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" font-weight="900" fill="#ef0107">LEAGUE</text>
+          </svg>
+        </div>
+        <h1 style="font-size:36px;font-weight:800;color:#fff;margin:0;letter-spacing:-.5px;">English Premier League</h1>
+      </div>
+    </div>
+  </div>
+
+  <main style="flex:1;">
+    <div class="rg1" style="max-width:1400px;margin:0 auto;padding:32px 24px;display:grid;grid-template-columns:1fr 300px;gap:32px;align-items:start;">
+
+      <!-- LEFT COLUMN -->
+      <div>
+        <h2 style="font-size:20px;font-weight:700;color:#0f172a;margin:0 0 12px;">English Premier League Tickets</h2>
+        <p style="font-size:14px;color:#374151;line-height:1.8;margin:0 0 28px;">The English Premier League is the most watched football league in the world, featuring 20 of England's top clubs competing from August through May each season. From blockbuster London derbies to North West clashes and title deciders, every matchday offers unmissable theatre. TicketMarketplace gives you access to tickets for every Premier League fixture — home and away — at prices to suit all budgets, backed by our 115% money-back guarantee.</p>
+
+        <h2 style="font-size:20px;font-weight:700;color:#0f172a;margin:0 0 14px;">Upcoming Premier League Fixtures:</h2>
+
+        <!-- Filters -->
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:16px;">
+          <select style="padding:8px 12px;font-size:13px;border:1.5px solid #e2e8f0;border-radius:7px;background:#fff;color:#374151;outline:none;cursor:pointer;height:36px;">
+            <option>Date: Any</option>
+            <option>Next 7 days</option>
+            <option>Next 30 days</option>
+            <option>Next 3 months</option>
+          </select>
+          <select style="padding:8px 12px;font-size:13px;border:1.5px solid #e2e8f0;border-radius:7px;background:#fff;color:#374151;outline:none;cursor:pointer;height:36px;">
+            <option>City: All</option>
+            <option>London</option>
+            <option>Manchester</option>
+            <option>Liverpool</option>
+            <option>Birmingham</option>
+            <option>Newcastle</option>
+            <option>Leeds</option>
+            <option>Leicester</option>
+            <option>Brighton</option>
+            <option>Nottingham</option>
+          </select>
+        </div>
+
+        <!-- Fixture list -->
+        <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px;">
+          <sc-for list="{{ fixtures }}" as="fx" hint-placeholder-count="8">
+            <a href="event.dc.html" style="display:flex;align-items:center;gap:14px;padding:14px 16px;background:#fff;border:1px solid #e2e8f0;border-radius:8px;color:inherit;flex-wrap:wrap;">
+              <div style="text-align:center;min-width:48px;flex-shrink:0;">
+                <div style="font-size:10px;font-weight:600;text-transform:uppercase;color:#64748b;">{{ fx.month }}</div>
+                <div style="font-size:24px;font-weight:700;color:#2d0a4e;line-height:1.1;">{{ fx.day }}</div>
+                <div style="font-size:10px;color:#94a3b8;">{{ fx.dow }} · {{ fx.time }}</div>
+              </div>
+              <div style="flex:1;min-width:0;">
+                <div style="font-size:14px;font-weight:600;color:#0f172a;margin-bottom:3px;">{{ fx.title }}</div>
+                <div style="display:flex;align-items:center;gap:4px;margin-bottom:2px;">
+                  <span style="width:13px;height:13px;border-radius:50%;background:#2d0a4e;flex-shrink:0;"></span>
+                  <span style="font-size:12px;color:#64748b;">English Premier League</span>
+                </div>
+                <div style="font-size:12px;color:#94a3b8;">{{ fx.venue }}</div>
+              </div>
+              <div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px;flex-shrink:0;">
+                <sc-if value="{{ fx.hasLabel }}" hint-placeholder-val="{{ false }}">
+                  <span style="font-size:11px;font-weight:600;padding:3px 8px;border-radius:4px;background:{{ fx.labelBg }};color:{{ fx.labelCol }};">{{ fx.label }}</span>
+                </sc-if>
+                <div style="background:#16a34a;color:#fff;padding:8px 14px;border-radius:6px;font-size:13px;font-weight:600;white-space:nowrap;">From {{ fx.price }}</div>
+              </div>
+            </a>
+          </sc-for>
+        </div>
+
+        <div style="text-align:center;margin-bottom:32px;">
+          <button style="display:inline-flex;align-items:center;gap:6px;padding:10px 28px;border:1.5px solid #e2e8f0;border-radius:7px;font-size:14px;font-weight:600;color:#374151;background:#fff;cursor:pointer;">Load More Fixtures ↓</button>
+        </div>
+
+        <p style="font-size:14px;color:#374151;line-height:1.8;margin:0 0 36px;">With 380 matches played each season across stadiums from Bournemouth to Newcastle, the Premier League offers fans unrivalled choice. Whether you're planning a trip to the capital to watch a London derby, heading to Anfield for one of football's great atmospheres, or catching a title-race six-pointer at the Etihad, TicketMarketplace puts those tickets within reach — even for fixtures officially listed as sold out.</p>
+
+        <!-- Related fixtures / other competitions -->
+        <h3 style="font-size:18px;font-weight:700;color:#0f172a;margin:0 0 16px;">Other Competitions</h3>
+        <div style="display:flex;gap:12px;overflow-x:auto;padding-bottom:10px;scrollbar-width:none;">
+          <sc-for list="{{ relatedComps }}" as="rc" hint-placeholder-count="5">
+            <a href="event-group.dc.html" style="display:flex;flex-direction:column;align-items:center;gap:8px;text-decoration:none;flex-shrink:0;background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:14px 18px;min-width:130px;">
+              <div style="width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;overflow:hidden;">
+                <svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" style="width:44px;height:44px;"><circle cx="22" cy="22" r="22" fill="{{ rc.color }}"/><text x="22" y="27" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" font-weight="800" fill="#fff">{{ rc.abbr }}</text></svg>
+              </div>
+              <span style="font-size:12px;font-weight:600;color:#374151;text-align:center;line-height:1.3;">{{ rc.name }}</span>
+            </a>
+          </sc-for>
+        </div>
+      </div>
+
+      <!-- SIDEBAR -->
+      <aside style="position:sticky;top:100px;display:flex;flex-direction:column;gap:18px;">
+
+        <!-- Our Customers Say -->
+        <div style="background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:16px 18px;">
+          <div style="font-size:14px;font-weight:700;color:#0f172a;margin-bottom:12px;">Our Customers Say</div>
+          <div style="display:flex;gap:2px;margin-bottom:8px;">
+            <span style="color:#f59e0b;font-size:20px;">★★★★★</span>
+          </div>
+          <div style="font-size:13px;color:#374151;line-height:1.6;margin-bottom:12px;font-style:italic;">"Bought three Premier League matches in one go — smooth process, tickets arrived well in advance. Fantastic service!"</div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div style="width:32px;height:32px;border-radius:50%;background:#e2e8f0;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;">👤</div>
+            <div><div style="font-size:12px;font-weight:600;color:#0f172a;">Henrik, Sweden</div><div style="font-size:11px;color:#94a3b8;">February 2025</div></div>
+            <div style="margin-left:auto;display:flex;gap:4px;"><button style="width:26px;height:26px;border-radius:50%;border:1px solid #e2e8f0;background:#fff;font-size:12px;cursor:pointer;">‹</button><button style="width:26px;height:26px;border-radius:50%;border:1px solid #e2e8f0;background:#fff;font-size:12px;cursor:pointer;">›</button></div>
+          </div>
+          <div style="margin-top:10px;display:flex;align-items:center;gap:6px;background:#fffbeb;border:1px solid #fde68a;border-radius:6px;padding:7px 10px;">
+            <span style="font-size:13px;">🔥</span>
+            <span style="font-size:12px;color:#92400e;font-weight:500;">1,240 people are viewing Premier League tickets.<br/><a href="#" style="color:#92400e;font-weight:700;text-decoration:underline;">Try to secure the best value tickets now!</a></span>
+          </div>
+        </div>
+
+        <!-- Latest Transactions -->
+        <div style="background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:16px 18px;">
+          <div style="font-size:14px;font-weight:700;color:#0f172a;margin-bottom:12px;">Premier League Latest Transactions</div>
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <div style="display:flex;align-items:flex-start;gap:8px;"><span style="font-size:14px;margin-top:1px;">🎟️</span><div style="font-size:12px;color:#374151;line-height:1.5;"><strong>2 tickets</strong> were purchased to <a href="event.dc.html" style="color:#2563eb;font-weight:600;">Arsenal vs Chelsea</a><div style="font-size:11px;color:#94a3b8;">8 minutes ago</div></div></div>
+            <div style="display:flex;align-items:flex-start;gap:8px;"><span style="font-size:14px;margin-top:1px;">🎟️</span><div style="font-size:12px;color:#374151;line-height:1.5;"><strong>4 tickets</strong> were purchased to <a href="event.dc.html" style="color:#2563eb;font-weight:600;">Man City vs Liverpool</a><div style="font-size:11px;color:#94a3b8;">34 minutes ago</div></div></div>
+            <div style="display:flex;align-items:flex-start;gap:8px;"><span style="font-size:14px;margin-top:1px;">🎟️</span><div style="font-size:12px;color:#374151;line-height:1.5;"><strong>1 ticket</strong> was purchased to <a href="event.dc.html" style="color:#2563eb;font-weight:600;">Tottenham vs Man Utd</a><div style="font-size:11px;color:#94a3b8;">1 hour ago</div></div></div>
+          </div>
+        </div>
+
+        <!-- Blog -->
+        <div style="background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:16px 18px;">
+          <div style="font-size:14px;font-weight:700;color:#0f172a;margin-bottom:12px;">From WOW Blog</div>
+          <div style="display:flex;flex-direction:column;gap:14px;">
+            <div>
+              <div style="font-size:13px;font-weight:600;color:#0f172a;margin-bottom:4px;line-height:1.4;">How to Buy Premier League Tickets: A Complete Guide</div>
+              <div style="font-size:12px;color:#64748b;line-height:1.5;margin-bottom:7px;">From official club ballots to secondary marketplaces — everything you need to know to secure a seat at a Premier League match...</div>
+              <div style="display:flex;align-items:center;justify-content:space-between;"><div style="display:flex;align-items:center;gap:6px;"><div style="width:24px;height:24px;border-radius:50%;background:#e2e8f0;"></div><span style="font-size:11px;color:#94a3b8;">Robert Fox</span></div><a href="#" style="font-size:12px;font-weight:600;color:#374151;border:1px solid #e2e8f0;padding:4px 12px;border-radius:5px;">Read →</a></div>
+            </div>
+            <div style="border-top:1px solid #f1f5f9;padding-top:14px;">
+              <div style="font-size:13px;font-weight:600;color:#0f172a;margin-bottom:4px;line-height:1.4;">Best Premier League Stadiums to Visit as a Neutral Fan</div>
+              <div style="font-size:12px;color:#64748b;line-height:1.5;margin-bottom:7px;">From the electric atmosphere of Anfield to the modern grandeur of the Tottenham Hotspur Stadium, we rank the best grounds...</div>
+              <div style="display:flex;align-items:center;justify-content:space-between;"><div style="display:flex;align-items:center;gap:6px;"><div style="width:24px;height:24px;border-radius:50%;background:#e2e8f0;"></div><span style="font-size:11px;color:#94a3b8;">Sarah Chen</span></div><a href="#" style="font-size:12px;font-weight:600;color:#374151;border:1px solid #e2e8f0;padding:4px 12px;border-radius:5px;">Read →</a></div>
+            </div>
+          </div>
+        </div>
+
+      </aside>
+    </div>
+
+    <!-- Our Benefits (full width) -->
+    <div style="background:#1a3a2a;padding:48px 24px;">
+      <div style="max-width:1400px;margin:0 auto;">
+        <div class="rben" style="display:grid;grid-template-columns:repeat(5,1fr);gap:24px;text-align:center;">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:10px;"><div style="width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;font-size:22px;">💬</div><div style="font-size:13px;font-weight:700;color:#fff;">Live chat 7 days/week</div><div style="font-size:12px;color:rgba(255,255,255,.55);line-height:1.5;">Available to assist you 7 days/week in-store or online.</div></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:10px;"><div style="width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;font-size:22px;">🔒</div><div style="font-size:13px;font-weight:700;color:#fff;">SSL Secure booking</div><div style="font-size:12px;color:rgba(255,255,255,.55);line-height:1.5;">Encrypted with SSL. Secure risk-free transactions.</div></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:10px;"><div style="width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;font-size:22px;">🛡️</div><div style="font-size:13px;font-weight:700;color:#fff;">115% money back</div><div style="font-size:12px;color:rgba(255,255,255,.55);line-height:1.5;">115% money-back guarantee on all tickets. Learn more.</div></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:10px;"><div style="width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;font-size:22px;">👑</div><div style="font-size:13px;font-weight:700;color:#fff;">VIP / Hospitality packages</div><div style="font-size:12px;color:rgba(255,255,255,.55);line-height:1.5;">From low cost affordable tickets to VIP / hospitality packages.</div></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:10px;"><div style="width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;font-size:22px;">⚡</div><div style="font-size:13px;font-weight:700;color:#fff;">Last minute bookings</div><div style="font-size:12px;color:rgba(255,255,255,.55);line-height:1.5;">Last minute bookings for "sold out" events.</div></div>
+        </div>
+        <div style="text-align:center;margin-top:24px;"><div style="display:inline-flex;align-items:center;gap:5px;border:2px solid #16a34a;border-radius:6px;padding:6px 14px;"><span style="font-size:14px;">🔒</span><span style="font-size:12px;font-weight:700;color:#16a34a;letter-spacing:.5px;">SECURE</span></div></div>
+      </div>
+    </div>
+
+    <!-- FAQ -->
+    <div style="max-width:1400px;margin:0 auto;padding:40px 24px;">
+      <h2 style="font-size:20px;font-weight:700;color:#0f172a;margin:0 0 20px;">FAQ</h2>
+      <div style="display:flex;flex-direction:column;gap:0;border:1px solid #e2e8f0;border-radius:10px;overflow:hidden;">
+        <sc-for list="{{ faqs }}" as="faq" hint-placeholder-count="5">
+          <div style="border-bottom:1px solid #f1f5f9;">
+            <button onclick="{{ faq.toggle }}" style="width:100%;display:flex;justify-content:space-between;align-items:center;padding:16px 20px;font-size:14px;font-weight:600;color:#0f172a;background:#fff;border:none;cursor:pointer;text-align:left;gap:12px;">
+              <span>{{ faq.q }}</span>
+              <span style="font-size:18px;color:#64748b;flex-shrink:0;">{{ faq.icon }}</span>
+            </button>
+            <sc-if value="{{ faq.open }}" hint-placeholder-val="{{ false }}">
+              <div style="padding:0 20px 16px;font-size:13px;color:#374151;line-height:1.7;background:#fafafa;border-top:1px solid #f1f5f9;">{{ faq.a }}</div>
+            </sc-if>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+
+    <!-- All Premier League Teams -->
+    <div style="max-width:1400px;margin:0 auto;padding:0 24px 48px;">
+      <h2 style="font-size:20px;font-weight:700;color:#0f172a;margin:0 0 20px;">All English Premier League Teams</h2>
+      <div class="rfg" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;">
+        <sc-for list="{{ allTeams }}" as="team" hint-placeholder-count="20">
+          <a href="performer.dc.html" style="display:flex;align-items:center;gap:12px;padding:12px 16px;background:#fff;border:1px solid #e2e8f0;border-radius:8px;color:inherit;text-decoration:none;">
+            <div style="width:36px;height:36px;border-radius:50%;flex-shrink:0;">
+              <svg viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" style="width:36px;height:36px;"><circle cx="18" cy="18" r="17" fill="{{ team.color }}"/><text x="18" y="23" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" font-weight="800" fill="{{ team.textColor }}">{{ team.abbr }}</text></svg>
+            </div>
+            <div style="flex:1;min-width:0;">
+              <div style="font-size:14px;font-weight:500;color:#0f172a;">{{ team.name }}</div>
+              <div style="font-size:12px;color:#94a3b8;">{{ team.city }}</div>
+            </div>
+            <span style="color:#94a3b8;font-size:16px;">›</span>
+          </a>
+        </sc-for>
+      </div>
+    </div>
+  </main>
+
+  <footer style="background:#0f172a;color:#94a3b8;padding:48px 24px 32px;">
+    <div style="max-width:1400px;margin:0 auto;">
+      <div class="rfg" style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:40px;">
+        <div><div style="font-size:18px;font-weight:700;color:#fff;margin-bottom:10px;">TicketMarketplace</div><p style="font-size:13px;color:#64748b;line-height:1.7;max-width:220px;margin:0;">The secondary ticket marketplace for live football events.</p></div>
+        <div><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:#64748b;margin-bottom:14px;">Support</div><div style="display:flex;flex-direction:column;gap:9px;"><a href="#" style="font-size:13px;color:#94a3b8;">Contact Us</a><a href="#" style="font-size:13px;color:#94a3b8;">FAQs</a><a href="#" style="font-size:13px;color:#94a3b8;">Blog</a></div></div>
+        <div><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:#64748b;margin-bottom:14px;">Company</div><div style="display:flex;flex-direction:column;gap:9px;"><a href="#" style="font-size:13px;color:#94a3b8;">Terms &amp; Conditions</a><a href="#" style="font-size:13px;color:#94a3b8;">Disclaimer</a><a href="#" style="font-size:13px;color:#94a3b8;">Privacy Policy</a><a href="#" style="font-size:13px;color:#94a3b8;">Travel Agents &amp; Affiliates</a><a href="#" style="font-size:13px;color:#94a3b8;">Reviews</a></div></div>
+        <div><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:#64748b;margin-bottom:14px;">Follow Us</div><div style="display:flex;gap:14px;"><a href="#" style="font-size:18px;color:#64748b;">▶</a><a href="#" style="font-size:18px;color:#64748b;">f</a><a href="#" style="font-size:18px;color:#64748b;">◎</a><a href="#" style="font-size:18px;color:#64748b;">𝕏</a></div></div>
+      </div>
+      <div style="border-top:1px solid #1e293b;padding-top:20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
+        <p style="font-size:12px;color:#475569;margin:0;">⚠️ TicketMarketplace is a secondary market reseller. Prices may exceed face value.</p>
+        <p style="font-size:12px;color:#475569;margin:0;">© 2027 TicketMarketplace. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+
+class Component extends DCLogic {
+  state = {
+    authModal: false, authTab: 'signin', menuOpen: false,
+    openFaqs: { f1: true },
+  };
+
+  FIXTURES = [
+    { month:'Feb', day:'15', dow:'Sat', time:'12:30', title:'Arsenal vs Chelsea',            venue:'Emirates Stadium · London',           price:'£127', label:'Selling fast', labelBg:'#fef3c7', labelCol:'#92400e' },
+    { month:'Feb', day:'15', dow:'Sat', time:'15:00', title:'Manchester City vs Liverpool',  venue:'Etihad Stadium · Manchester',         price:'£210', label:'Few left',     labelBg:'#fee2e2', labelCol:'#991b1b' },
+    { month:'Feb', day:'15', dow:'Sat', time:'17:30', title:'Tottenham vs Newcastle',        venue:'Tottenham Hotspur Stadium · London',  price:'£88',  label:'',             labelBg:'',        labelCol:''        },
+    { month:'Feb', day:'22', dow:'Sat', time:'15:00', title:'Liverpool vs Manchester Utd',   venue:'Anfield · Liverpool',                 price:'£195', label:'Selling fast', labelBg:'#fef3c7', labelCol:'#92400e' },
+    { month:'Feb', day:'22', dow:'Sat', time:'17:30', title:'Chelsea vs Aston Villa',        venue:'Stamford Bridge · London',            price:'£98',  label:'',             labelBg:'',        labelCol:''        },
+    { month:'Mar', day:'01', dow:'Sat', time:'15:00', title:'Arsenal vs Brentford',          venue:'Emirates Stadium · London',           price:'£95',  label:'',             labelBg:'',        labelCol:''        },
+    { month:'Mar', day:'01', dow:'Sat', time:'15:00', title:'Brighton vs Wolves',            venue:'Amex Stadium · Brighton',             price:'£62',  label:'',             labelBg:'',        labelCol:''        },
+    { month:'Mar', day:'08', dow:'Sat', time:'12:30', title:'Manchester Utd vs Arsenal',     venue:'Old Trafford · Manchester',           price:'£175', label:'Selling fast', labelBg:'#fef3c7', labelCol:'#92400e' },
+    { month:'Mar', day:'15', dow:'Sat', time:'17:30', title:'Chelsea vs Arsenal',            venue:'Stamford Bridge · London',            price:'£98',  label:'',             labelBg:'',        labelCol:''        },
+    { month:'Mar', day:'22', dow:'Sat', time:'15:00', title:'Newcastle vs Manchester City',  venue:'St. James\' Park · Newcastle',        price:'£155', label:'Few left',     labelBg:'#fee2e2', labelCol:'#991b1b' },
+    { month:'Apr', day:'05', dow:'Sat', time:'15:00', title:'Liverpool vs Tottenham',        venue:'Anfield · Liverpool',                 price:'£168', label:'Selling fast', labelBg:'#fef3c7', labelCol:'#92400e' },
+    { month:'Apr', day:'12', dow:'Sat', time:'17:30', title:'Arsenal vs Aston Villa',        venue:'Emirates Stadium · London',           price:'£110', label:'',             labelBg:'',        labelCol:''        },
+  ];
+
+  FAQS = [
+    { id:'f1', q:'Why buy Premier League tickets from TicketMarketplace?', a:"TicketMarketplace is a trusted secondary marketplace giving you access to tickets for every Premier League fixture — including sold-out matches. All orders are backed by our 115% money-back guarantee, and our team is available 7 days a week to help with any query." },
+    { id:'f2', q:'How do I find Premier League tickets for a specific team?', a:'Use the search bar or browse by team using the "All Teams" section below. Each team page lists their full upcoming fixture schedule with live pricing.' },
+    { id:'f3', q:'How much do Premier League tickets cost?', a:'Prices vary depending on the match, seating category, and demand. As a secondary marketplace, prices may differ from face value. Fixtures typically start from £60 for lower-profile matches, rising to £300+ for title-race clashes or top-six derbies.' },
+    { id:'f4', q:'How will my tickets be delivered?', a:'Most tickets are delivered electronically as PDF eTickets to your email 1–3 days before the match. Some events may use courier delivery or box office collection — the delivery method is shown clearly on each listing.' },
+    { id:'f5', q:'Is it safe to buy Premier League tickets online?', a:'Yes. All transactions are SSL-encrypted and fully secure. Every ticket comes with our 115% money-back guarantee — if an event is cancelled and not rescheduled, you receive a full refund plus 15%.' },
+    { id:'f6', q:'WoW is a Secondary Market Seller', a:'TicketMarketplace is a secondary ticket marketplace. Tickets are listed by independent sellers and prices may be above or below original face value. We are not affiliated with the Premier League, any of its clubs, or any venue.' },
+    { id:'f7', q:'Can I get tickets at short notice?', a:'Yes — we specialise in last-minute and sold-out event tickets. Even if a fixture is listed as officially sold out, our network of sellers frequently has availability. Check each event page for real-time stock.' },
+    { id:'f8', q:'Our Promises to You', a:'We promise 100% authentic tickets, secure SSL transactions, responsive customer support 7 days a week, and our 115% money-back guarantee on every order.' },
+  ];
+
+  RELATED_COMPS = [
+    { name:'FA Cup',          abbr:'FAC',  color:'#ef4444' },
+    { name:'League Cup',      abbr:'EFL',  color:'#7c3aed' },
+    { name:'Champions League',abbr:'UCL',  color:'#1a56db' },
+    { name:'Europa League',   abbr:'UEL',  color:'#f97316' },
+    { name:'Championship',    abbr:'CH',   color:'#0369a1' },
+  ];
+
+  ALL_TEAMS = [
+    { name:'Arsenal',                abbr:'AFC',  color:'#ef0107', textColor:'#fff', city:'London'      },
+    { name:'Aston Villa',            abbr:'AVFC', color:'#670E36', textColor:'#fff', city:'Birmingham'  },
+    { name:'Bournemouth',            abbr:'AFC',  color:'#DA291C', textColor:'#fff', city:'Bournemouth' },
+    { name:'Brentford',              abbr:'BFC',  color:'#e30613', textColor:'#fff', city:'London'      },
+    { name:'Brighton',               abbr:'BHAFC',color:'#0057B8', textColor:'#fff', city:'Brighton'    },
+    { name:'Chelsea',                abbr:'CFC',  color:'#034694', textColor:'#fff', city:'London'      },
+    { name:'Crystal Palace',         abbr:'CPFC', color:'#1B458F', textColor:'#fff', city:'London'      },
+    { name:'Everton',                abbr:'EFC',  color:'#003399', textColor:'#fff', city:'Liverpool'   },
+    { name:'Fulham',                 abbr:'FFC',  color:'#CC0000', textColor:'#fff', city:'London'      },
+    { name:'Ipswich Town',           abbr:'ITFC', color:'#0044A0', textColor:'#fff', city:'Ipswich'     },
+    { name:'Leicester City',         abbr:'LCFC', color:'#003090', textColor:'#fff', city:'Leicester'   },
+    { name:'Liverpool',              abbr:'LFC',  color:'#C8102E', textColor:'#fff', city:'Liverpool'   },
+    { name:'Manchester City',        abbr:'MCFC', color:'#6CABDD', textColor:'#fff', city:'Manchester'  },
+    { name:'Manchester United',      abbr:'MUFC', color:'#DA291C', textColor:'#fff', city:'Manchester'  },
+    { name:'Newcastle United',       abbr:'NUFC', color:'#241F20', textColor:'#fff', city:'Newcastle'   },
+    { name:'Nottingham Forest',      abbr:'NFFC', color:'#e63329', textColor:'#fff', city:'Nottingham'  },
+    { name:'Southampton',            abbr:'SFC',  color:'#D71920', textColor:'#fff', city:'Southampton' },
+    { name:'Tottenham Hotspur',      abbr:'THFC', color:'#132257', textColor:'#fff', city:'London'      },
+    { name:'West Ham United',        abbr:'WHU',  color:'#7A263A', textColor:'#fff', city:'London'      },
+    { name:'Wolverhampton',          abbr:'WWFC', color:'#FDB913', textColor:'#231F20', city:'Wolverhampton' },
+  ];
+
+  renderVals() {
+    const { authModal, authTab, menuOpen, openFaqs } = this.state;
+    const t = authTab;
+
+    const faqs = this.FAQS.map(f => ({
+      ...f,
+      open: !!openFaqs[f.id],
+      icon: openFaqs[f.id] ? '∧' : '∨',
+      toggle: () => this.setState(s => ({ openFaqs: { ...s.openFaqs, [f.id]: !s.openFaqs[f.id] } })),
+    }));
+
+    return {
+      authModal, menuOpen,
+      isSignIn: t==='signin', isSignUp: t==='signup', isGuest: t==='guest',
+      siWeight: t==='signin'?600:400, siColor: t==='signin'?'#2563eb':'#64748b', siBorder: t==='signin'?'2px solid #2563eb':'2px solid transparent',
+      suWeight: t==='signup'?600:400, suColor: t==='signup'?'#2563eb':'#64748b', suBorder: t==='signup'?'2px solid #2563eb':'2px solid transparent',
+      gWeight:  t==='guest' ?600:400, gColor:  t==='guest' ?'#2563eb':'#64748b', gBorder:  t==='guest' ?'2px solid #2563eb':'2px solid transparent',
+      openModal:     () => this.setState({ authModal:true, authTab:'signin', menuOpen:false }),
+      closeModal:    (e) => { if (e.target===e.currentTarget) this.setState({ authModal:false }); },
+      closeModalBtn: () => this.setState({ authModal:false }),
+      tabSignIn: () => this.setState({ authTab:'signin' }),
+      tabSignUp: () => this.setState({ authTab:'signup' }),
+      tabGuest:  () => this.setState({ authTab:'guest'  }),
+      openMenu:  () => this.setState({ menuOpen:true  }),
+      closeMenu: () => this.setState({ menuOpen:false }),
+      faqs,
+      fixtures: this.FIXTURES.map(f => ({ ...f, hasLabel: !!f.label })),
+      relatedComps: this.RELATED_COMPS,
+      allTeams: this.ALL_TEAMS,
+    };
+  }
+}
+
+</script>
+</body>
+</html>

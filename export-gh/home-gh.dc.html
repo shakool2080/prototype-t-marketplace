@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body { margin: 0; font-family: 'Inter', system-ui, sans-serif; color: #0f172a; }
+    a { text-decoration: none; color: inherit; }
+    button { font-family: inherit; cursor: pointer; border: none; background: none; }
+    input, select { font-family: inherit; }
+    .pm { transform-box: fill-box; transform-origin: center; }
+    @keyframes pm1 { 0%,100%{transform:translate(0,0)} 30%{transform:translate(38px,-22px)} 60%{transform:translate(62px,12px)} 80%{transform:translate(24px,36px)} }
+    @keyframes pm2 { 0%,100%{transform:translate(0,0)} 25%{transform:translate(-28px,24px)} 55%{transform:translate(-48px,-14px)} 80%{transform:translate(-18px,-32px)} }
+    @keyframes pm3 { 0%,100%{transform:translate(0,0)} 20%{transform:translate(44px,-10px)} 55%{transform:translate(68px,22px)} 75%{transform:translate(28px,42px)} }
+    @keyframes pm4 { 0%,100%{transform:translate(0,0)} 35%{transform:translate(-32px,-18px)} 65%{transform:translate(-52px,12px)} 85%{transform:translate(-14px,28px)} }
+    @keyframes pm5 { 0%,100%{transform:translate(0,0)} 28%{transform:translate(-26px,22px)} 58%{transform:translate(-50px,-10px)} 80%{transform:translate(-22px,-28px)} }
+    @keyframes pm6 { 0%,100%{transform:translate(0,0)} 32%{transform:translate(22px,-28px)} 62%{transform:translate(42px,12px)} 82%{transform:translate(18px,32px)} }
+    @keyframes pm7 { 0%,100%{transform:translate(0,0)} 22%{transform:translate(-36px,-8px)} 52%{transform:translate(-58px,18px)} 76%{transform:translate(-28px,38px)} }
+    @keyframes ball { 0%,100%{transform:translate(0,0)} 12%{transform:translate(90px,-42px)} 28%{transform:translate(160px,18px)} 44%{transform:translate(90px,82px)} 60%{transform:translate(0px,48px)} 76%{transform:translate(-64px,8px)} 90%{transform:translate(-32px,-28px)} }
+    .scroll-hide::-webkit-scrollbar { display:none; }
+    .card-hover { transition:transform .18s, box-shadow .18s; }
+    .card-hover:hover { transform:translateY(-3px); box-shadow:0 8px 24px rgba(0,0,0,.12); }
+  </style>
+</helmet>
+
+<sc-if value="{{ authModal }}" hint-placeholder-val="{{ false }}">
+  <div onclick="{{ closeModal }}" style="position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:1000;display:flex;align-items:center;justify-content:center;padding:16px;">
+    <div style="background:#fff;border-radius:12px;width:100%;max-width:440px;position:relative;box-shadow:0 20px 60px rgba(0,0,0,.25);overflow:hidden;">
+      <div style="padding:28px 28px 0;"><button onclick="{{ closeModalBtn }}" style="position:absolute;top:16px;right:16px;color:#94a3b8;font-size:22px;line-height:1;padding:4px;">×</button><div style="font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#94a3b8;margin-bottom:6px;">TicketMarketplace</div><h2 style="font-size:22px;font-weight:700;color:#0f172a;margin:0 0 4px;">Welcome</h2><p style="font-size:14px;color:#64748b;margin:0 0 20px;">Sign in or continue as a guest</p></div>
+      <div style="display:flex;border-bottom:2px solid #f1f5f9;padding:0 28px;">
+        <button onclick="{{ tabSignIn }}" style="flex:1;padding:10px 0;font-size:14px;font-weight:{{ siWeight }};color:{{ siColor }};background:none;border:none;border-bottom:{{ siBorder }};cursor:pointer;margin-bottom:-2px;">Sign In</button>
+        <button onclick="{{ tabSignUp }}" style="flex:1;padding:10px 0;font-size:14px;font-weight:{{ suWeight }};color:{{ suColor }};background:none;border:none;border-bottom:{{ suBorder }};cursor:pointer;margin-bottom:-2px;">Sign Up</button>
+        <button onclick="{{ tabGuest }}" style="flex:1;padding:10px 0;font-size:14px;font-weight:{{ gWeight }};color:{{ gColor }};background:none;border:none;border-bottom:{{ gBorder }};cursor:pointer;margin-bottom:-2px;">Guest</button>
+      </div>
+      <div style="padding:24px 28px 28px;">
+        <sc-if value="{{ isSignIn }}" hint-placeholder-val="{{ true }}"><div><div style="margin-bottom:14px;"><label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:5px;">Email</label><input type="email" placeholder="you@example.com" style="width:100%;padding:10px 12px;border:1.5px solid #e2e8f0;border-radius:7px;font-size:14px;outline:none;"/></div><div style="margin-bottom:18px;"><label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:5px;">Password</label><input type="password" placeholder="••••••••" style="width:100%;padding:10px 12px;border:1.5px solid #e2e8f0;border-radius:7px;font-size:14px;outline:none;"/></div><button style="width:100%;padding:12px;background:#2563eb;color:#fff;border-radius:7px;font-size:15px;font-weight:600;cursor:pointer;">Sign In →</button><p style="text-align:center;font-size:13px;color:#94a3b8;margin:14px 0 0;"><a href="#" style="color:#2563eb;">Forgot password?</a></p></div></sc-if>
+        <sc-if value="{{ isSignUp }}" hint-placeholder-val="{{ false }}"><div><div style="margin-bottom:14px;"><label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:5px;">Full name</label><input type="text" placeholder="Your name" style="width:100%;padding:10px 12px;border:1.5px solid #e2e8f0;border-radius:7px;font-size:14px;outline:none;"/></div><div style="margin-bottom:14px;"><label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:5px;">Email</label><input type="email" placeholder="you@example.com" style="width:100%;padding:10px 12px;border:1.5px solid #e2e8f0;border-radius:7px;font-size:14px;outline:none;"/></div><div style="margin-bottom:18px;"><label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:5px;">Password</label><input type="password" placeholder="••••••••" style="width:100%;padding:10px 12px;border:1.5px solid #e2e8f0;border-radius:7px;font-size:14px;outline:none;"/></div><button style="width:100%;padding:12px;background:#2563eb;color:#fff;border-radius:7px;font-size:15px;font-weight:600;cursor:pointer;">Create Account →</button></div></sc-if>
+        <sc-if value="{{ isGuest }}" hint-placeholder-val="{{ false }}"><div><p style="font-size:14px;color:#64748b;margin:0 0 18px;line-height:1.6;">Enter your email to receive tickets and order confirmation. No account needed.</p><div style="margin-bottom:18px;"><label style="display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:5px;">Email address</label><input type="email" placeholder="you@example.com" style="width:100%;padding:10px 12px;border:1.5px solid #e2e8f0;border-radius:7px;font-size:14px;outline:none;"/></div><a href="football/english-premier-league/arsenal/arsenal-vs-chelsea/checkout/" style="display:block;text-align:center;padding:12px;background:#2563eb;color:#fff;border-radius:7px;font-size:15px;font-weight:600;">Continue as Guest →</a></div></sc-if>
+      </div>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
+  <div onclick="{{ closeMenu }}" style="position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:200;"></div>
+  <div style="position:fixed;top:0;right:0;width:280px;height:100vh;background:#fff;z-index:201;overflow-y:auto;display:flex;flex-direction:column;box-shadow:-2px 0 20px rgba(0,0,0,.15);">
+    <div style="padding:20px;border-bottom:1px solid #f1f5f9;display:flex;align-items:center;gap:12px;"><div style="width:44px;height:44px;border-radius:50%;background:#f1f5f9;display:flex;align-items:center;justify-content:center;font-size:20px;color:#94a3b8;flex-shrink:0;">👤</div><div style="flex:1;min-width:0;"><div style="font-size:14px;font-weight:600;color:#0f172a;">My Account</div><div style="font-size:12px;color:#94a3b8;">Not signed in</div></div><button onclick="{{ closeMenu }}" style="color:#94a3b8;font-size:22px;padding:4px;flex-shrink:0;line-height:1;">×</button></div>
+    <nav style="padding:8px 0;flex:1;"><button onclick="{{ openModal }}" style="display:flex;align-items:center;width:100%;padding:13px 20px;font-size:14px;color:#2563eb;font-weight:600;background:none;border:none;cursor:pointer;gap:10px;">🔑 Log in / Sign up</button><a href="./" style="display:flex;align-items:center;padding:13px 20px;font-size:14px;color:#374151;gap:10px;">👤 Profile</a><a href="./" style="display:flex;align-items:center;padding:13px 20px;font-size:14px;color:#374151;gap:10px;">🎟️ Orders</a><a href="#" style="display:flex;align-items:center;padding:13px 20px;font-size:14px;color:#374151;gap:10px;">📋 Listings</a><a href="#" style="display:flex;align-items:center;padding:13px 20px;font-size:14px;color:#374151;gap:10px;">💰 Sales</a><a href="#" style="display:flex;align-items:center;padding:13px 20px;font-size:14px;color:#374151;gap:10px;">💳 Payouts</a><a href="#" style="display:flex;align-items:center;padding:13px 20px;font-size:14px;color:#374151;gap:10px;">⚙️ Settings</a><div style="height:1px;background:#f1f5f9;margin:8px 16px;"></div><a href="#" style="display:flex;align-items:center;padding:13px 20px;font-size:14px;color:#0f172a;font-weight:600;gap:10px;">🏷️ Sell</a><a href="#" style="display:flex;align-items:center;padding:13px 20px;font-size:14px;color:#374151;gap:10px;">❓ Help</a></nav>
+  </div>
+</sc-if>
+
+<div style="display:flex;flex-direction:column;min-height:100vh;background:#f8fafc;">
+
+  <header style="background:#0f172a;color:#fff;position:sticky;top:0;z-index:100;box-shadow:0 1px 4px rgba(0,0,0,.3);">
+    <div style="display:flex;align-items:center;padding:0 24px;height:56px;gap:16px;max-width:1400px;margin:0 auto;">
+      <a href="./" style="font-size:18px;font-weight:700;color:#fff;white-space:nowrap;flex-shrink:0;letter-spacing:-.3px;">TicketMarketplace</a>
+      <div style="flex:1;max-width:500px;background:#1e293b;border:1px solid #334155;border-radius:7px;display:flex;align-items:center;padding:0 12px;gap:8px;height:38px;"><span style="color:#64748b;font-size:14px;">🔍</span><input type="search" placeholder="Search teams, competitions, venues..." style="background:none;border:none;outline:none;color:#fff;font-size:14px;width:100%;"/></div>
+      <button onclick="{{ openMenu }}" style="display:flex;align-items:center;gap:6px;color:#fff;font-size:14px;padding:7px 14px;border:1px solid #334155;border-radius:6px;margin-left:auto;background:none;white-space:nowrap;flex-shrink:0;">👤 Account ☰</button>
+    </div>
+    <div style="background:#1e293b;border-top:1px solid #0f172a;overflow-x:auto;scrollbar-width:none;">
+      <div style="display:flex;padding:0 24px;max-width:1400px;margin:0 auto;white-space:nowrap;">
+        <a href="football/" style="display:block;padding:10px 14px;font-size:13px;font-weight:500;color:#94a3b8;">Premier League</a>
+        <a href="football/" style="display:block;padding:10px 14px;font-size:13px;font-weight:500;color:#94a3b8;">Spanish League</a>
+        <a href="football/" style="display:block;padding:10px 14px;font-size:13px;font-weight:500;color:#94a3b8;">English Competitions</a>
+        <a href="football/" style="display:block;padding:10px 14px;font-size:13px;font-weight:500;color:#94a3b8;">European Competitions</a>
+        <a href="football/" style="display:block;padding:10px 14px;font-size:13px;font-weight:500;color:#94a3b8;">International</a>
+        <a href="football/" style="display:block;padding:10px 14px;font-size:13px;font-weight:500;color:#94a3b8;">Popular</a>
+        <a href="football/english-premier-league/arsenal/" style="display:block;padding:10px 14px;font-size:13px;font-weight:500;color:#94a3b8;">Teams</a>
+      </div>
+    </div>
+  </header>
+
+  <main style="flex:1;">
+
+    <!-- ══ HERO ══ -->
+    <div style="position:relative;min-height:520px;overflow:hidden;background:#071a0a;">
+      <!-- Animated pitch SVG -->
+      <svg viewBox="0 0 1000 600" preserveAspectRatio="xMidYMid slice" style="position:absolute;inset:0;width:100%;height:100%;opacity:.45;" aria-hidden="true">
+        <rect x="0" y="0" width="1000" height="600" fill="#071a0a"/>
+        <rect x="40" y="40" width="920" height="520" fill="#0f3d17" rx="6"/>
+        <rect x="40" y="40" width="920" height="520" fill="none" stroke="rgba(255,255,255,.28)" stroke-width="2" rx="6"/>
+        <line x1="500" y1="40" x2="500" y2="560" stroke="rgba(255,255,255,.28)" stroke-width="2"/>
+        <circle cx="500" cy="300" r="80" fill="none" stroke="rgba(255,255,255,.28)" stroke-width="2"/>
+        <circle cx="500" cy="300" r="5" fill="rgba(255,255,255,.5)"/>
+        <rect x="40" y="178" width="115" height="244" fill="none" stroke="rgba(255,255,255,.2)" stroke-width="2"/>
+        <rect x="845" y="178" width="115" height="244" fill="none" stroke="rgba(255,255,255,.2)" stroke-width="2"/>
+        <rect x="40" y="228" width="52" height="144" fill="none" stroke="rgba(255,255,255,.2)" stroke-width="2"/>
+        <rect x="908" y="228" width="52" height="144" fill="none" stroke="rgba(255,255,255,.2)" stroke-width="2"/>
+        <path d="M40,40 Q54,40 54,54" fill="none" stroke="rgba(255,255,255,.2)" stroke-width="2"/>
+        <path d="M960,40 Q946,40 946,54" fill="none" stroke="rgba(255,255,255,.2)" stroke-width="2"/>
+        <path d="M40,560 Q54,560 54,546" fill="none" stroke="rgba(255,255,255,.2)" stroke-width="2"/>
+        <path d="M960,560 Q946,560 946,546" fill="none" stroke="rgba(255,255,255,.2)" stroke-width="2"/>
+        <!-- Home (red) -->
+        <circle class="pm" cx="140" cy="210" r="11" fill="#ef4444" style="animation:pm1 8.5s ease-in-out infinite;"/>
+        <circle class="pm" cx="190" cy="310" r="11" fill="#ef4444" style="animation:pm2 10s ease-in-out infinite .6s;"/>
+        <circle class="pm" cx="280" cy="180" r="11" fill="#ef4444" style="animation:pm3 9.2s ease-in-out infinite 1.2s;"/>
+        <circle class="pm" cx="260" cy="440" r="11" fill="#ef4444" style="animation:pm4 11s ease-in-out infinite 2s;"/>
+        <!-- Away (blue) -->
+        <circle class="pm" cx="680" cy="185" r="11" fill="#3b82f6" style="animation:pm5 9.4s ease-in-out infinite .4s;"/>
+        <circle class="pm" cx="740" cy="330" r="11" fill="#3b82f6" style="animation:pm6 8.8s ease-in-out infinite 1.5s;"/>
+        <circle class="pm" cx="640" cy="435" r="11" fill="#3b82f6" style="animation:pm7 10.5s ease-in-out infinite .9s;"/>
+        <!-- Ball -->
+        <circle class="pm" cx="500" cy="300" r="9" fill="white" style="animation:ball 7.2s ease-in-out infinite;" opacity=".95"/>
+      </svg>
+      <!-- Dark overlay -->
+      <div style="position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,0,0,.76) 0%,rgba(0,0,0,.42) 55%,rgba(0,0,0,.68) 100%);"></div>
+      <!-- Hero content -->
+      <div style="position:relative;z-index:1;max-width:1400px;margin:0 auto;padding:64px 24px 56px;display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center;">
+        <!-- Left: title + description + search -->
+        <div>
+          <h1 style="font-size:46px;font-weight:800;color:#fff;line-height:1.12;margin:0 0 20px;text-wrap:pretty;letter-spacing:-.5px;">Your ticket to the best events in UK &amp; Europe</h1>
+          <h2 style="font-size:17px;font-weight:400;color:rgba(255,255,255,.68);line-height:1.65;margin:0 0 32px;">Secure tickets to Premier League, Champions League, La Liga, and more. Buyer protection on every order.</h2>
+          <div style="background:rgba(255,255,255,.1);backdrop-filter:blur(8px);border:1.5px solid rgba(255,255,255,.2);border-radius:10px;display:flex;align-items:center;padding:4px 4px 4px 16px;gap:8px;">
+            <span style="font-size:16px;color:rgba(255,255,255,.55);">🔍</span>
+            <input type="search" placeholder="Search teams, venues, competitions..." style="background:none;border:none;outline:none;color:#fff;font-size:15px;flex:1;padding:11px 0;"/>
+            <a href="football/" style="background:#2563eb;color:#fff;padding:12px 22px;border-radius:7px;font-size:14px;font-weight:600;white-space:nowrap;cursor:pointer;">Search →</a>
+          </div>
+          <div style="display:flex;gap:16px;margin-top:20px;flex-wrap:wrap;">
+            <a href="football/english-premier-league/arsenal/" style="font-size:13px;color:rgba(255,255,255,.6);display:flex;align-items:center;gap:5px;">⚽ By Team</a>
+            <a href="event-group.dc.html" style="font-size:13px;color:rgba(255,255,255,.6);display:flex;align-items:center;gap:5px;">🏆 By Competition</a>
+            <a href="./" style="font-size:13px;color:rgba(255,255,255,.6);display:flex;align-items:center;gap:5px;">🏙️ By City</a>
+          </div>
+        </div>
+        <!-- Right: what our customers say -->
+        <div>
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:rgba(255,255,255,.45);margin-bottom:16px;">What our customers say</div>
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <div style="background:rgba(255,255,255,.1);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.15);border-radius:10px;padding:16px 18px;">
+              <div style="font-size:14px;color:#fbbf24;margin-bottom:7px;letter-spacing:1px;">★★★★★</div>
+              <p style="font-size:13.5px;color:rgba(255,255,255,.85);margin:0 0 10px;line-height:1.6;">"Got amazing seats for the Arsenal vs Chelsea derby. Delivery was instant and the whole process was seamless."</p>
+              <div style="font-size:12px;color:rgba(255,255,255,.45);font-weight:500;">James T. · Feb 2027</div>
+            </div>
+            <div style="background:rgba(255,255,255,.08);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:16px 18px;">
+              <div style="font-size:14px;color:#fbbf24;margin-bottom:7px;letter-spacing:1px;">★★★★★</div>
+              <p style="font-size:13.5px;color:rgba(255,255,255,.8);margin:0 0 10px;line-height:1.6;">"Flew from Madrid, bought Barcelona Champions League tickets. Fantastic seats, great price. Will use again!"</p>
+              <div style="font-size:12px;color:rgba(255,255,255,.4);font-weight:500;">Carlos R. · Jan 2027</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="max-width:1400px;margin:0 auto;padding:48px 24px;display:flex;flex-direction:column;gap:48px;">
+
+      <!-- ══ POPULAR CATEGORIES ══ -->
+      <section>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+          <h2 style="font-size:22px;font-weight:700;color:#0f172a;margin:0;">Popular event categories</h2>
+          <div style="display:flex;gap:6px;">
+            <button onclick="{{ scrollCatL }}" style="width:34px;height:34px;border-radius:50%;background:#fff;border:1.5px solid #e2e8f0;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;">‹</button>
+            <button onclick="{{ scrollCatR }}" style="width:34px;height:34px;border-radius:50%;background:#fff;border:1.5px solid #e2e8f0;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;">›</button>
+          </div>
+        </div>
+        <div id="cat-scroll" class="scroll-hide" style="display:flex;gap:14px;overflow-x:auto;padding-bottom:4px;scroll-behavior:smooth;">
+          <a href="football/" class="card-hover" style="flex-shrink:0;width:200px;border-radius:12px;overflow:hidden;background:linear-gradient(135deg,#1e3a5f,#2563eb);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px 16px;gap:10px;min-height:140px;">
+            <span style="font-size:36px;">⚽</span>
+            <span style="font-size:13px;font-weight:600;color:#fff;text-align:center;line-height:1.4;">Last Minute Football Tickets</span>
+          </a>
+          <a href="./" class="card-hover" style="flex-shrink:0;width:200px;border-radius:12px;overflow:hidden;background:linear-gradient(135deg,#4a0909,#a50044);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px 16px;gap:10px;min-height:140px;">
+            <span style="font-size:36px;">🏟️</span>
+            <span style="font-size:13px;font-weight:600;color:#fff;text-align:center;line-height:1.4;">Football in Barcelona</span>
+          </a>
+          <a href="./" class="card-hover" style="flex-shrink:0;width:200px;border-radius:12px;overflow:hidden;background:linear-gradient(135deg,#0d2b0d,#166534);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px 16px;gap:10px;min-height:140px;">
+            <span style="font-size:36px;">🏟️</span>
+            <span style="font-size:13px;font-weight:600;color:#fff;text-align:center;line-height:1.4;">Football in London</span>
+          </a>
+          <a href="football/" class="card-hover" style="flex-shrink:0;width:200px;border-radius:12px;overflow:hidden;background:linear-gradient(135deg,#0c2340,#1d4ed8);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px 16px;gap:10px;min-height:140px;">
+            <span style="font-size:36px;">🎅</span>
+            <span style="font-size:13px;font-weight:600;color:#fff;text-align:center;line-height:1.4;">Boxing Day Football</span>
+          </a>
+          <a href="event-group.dc.html" class="card-hover" style="flex-shrink:0;width:200px;border-radius:12px;overflow:hidden;background:linear-gradient(135deg,#1a0533,#7c3aed);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px 16px;gap:10px;min-height:140px;">
+            <span style="font-size:36px;">🏆</span>
+            <span style="font-size:13px;font-weight:600;color:#fff;text-align:center;line-height:1.4;">Champions League Semi-Finals</span>
+          </a>
+          <a href="event-group.dc.html" class="card-hover" style="flex-shrink:0;width:200px;border-radius:12px;overflow:hidden;background:linear-gradient(135deg,#1a0000,#dc2626);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px 16px;gap:10px;min-height:140px;">
+            <span style="font-size:36px;">⚔️</span>
+            <span style="font-size:13px;font-weight:600;color:#fff;text-align:center;line-height:1.4;">Manchester Derby</span>
+          </a>
+        </div>
+      </section>
+
+      <!-- ══ TOP COMPETITIONS ══ -->
+      <section>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+          <h2 style="font-size:22px;font-weight:700;color:#0f172a;margin:0;">Top competitions</h2>
+          <div style="display:flex;gap:6px;">
+            <button onclick="{{ scrollCompL }}" style="width:34px;height:34px;border-radius:50%;background:#fff;border:1.5px solid #e2e8f0;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;">‹</button>
+            <button onclick="{{ scrollCompR }}" style="width:34px;height:34px;border-radius:50%;background:#fff;border:1.5px solid #e2e8f0;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;">›</button>
+          </div>
+        </div>
+        <div id="comp-scroll" class="scroll-hide" style="display:flex;gap:14px;overflow-x:auto;padding-bottom:4px;scroll-behavior:smooth;">
+          <a href="football/" class="card-hover" style="flex-shrink:0;width:190px;background:#fff;border:1.5px solid #e2e8f0;border-radius:12px;padding:20px 16px;display:flex;flex-direction:column;align-items:center;gap:10px;">
+            <div style="width:52px;height:52px;background:linear-gradient(135deg,#1a0033,#6d28d9);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;">🏴󠁧󠁢󠁥󠁮󠁧󠁿</div>
+            <span style="font-size:13px;font-weight:600;color:#0f172a;text-align:center;line-height:1.4;">English Premier League</span>
+            <span style="font-size:11px;color:#94a3b8;">England</span>
+          </a>
+          <a href="football/" class="card-hover" style="flex-shrink:0;width:190px;background:#fff;border:1.5px solid #e2e8f0;border-radius:12px;padding:20px 16px;display:flex;flex-direction:column;align-items:center;gap:10px;">
+            <div style="width:52px;height:52px;background:linear-gradient(135deg,#00185e,#2563eb);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;">⭐</div>
+            <span style="font-size:13px;font-weight:600;color:#0f172a;text-align:center;line-height:1.4;">UEFA Champions League</span>
+            <span style="font-size:11px;color:#94a3b8;">Europe</span>
+          </a>
+          <a href="football/" class="card-hover" style="flex-shrink:0;width:190px;background:#fff;border:1.5px solid #e2e8f0;border-radius:12px;padding:20px 16px;display:flex;flex-direction:column;align-items:center;gap:10px;">
+            <div style="width:52px;height:52px;background:linear-gradient(135deg,#0a2040,#ea580c);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;">🌍</div>
+            <span style="font-size:13px;font-weight:600;color:#0f172a;text-align:center;line-height:1.4;">UEFA Europa League</span>
+            <span style="font-size:11px;color:#94a3b8;">Europe</span>
+          </a>
+          <a href="football/" class="card-hover" style="flex-shrink:0;width:190px;background:#fff;border:1.5px solid #e2e8f0;border-radius:12px;padding:20px 16px;display:flex;flex-direction:column;align-items:center;gap:10px;">
+            <div style="width:52px;height:52px;background:linear-gradient(135deg,#6b0000,#dc2626);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;">🇪🇸</div>
+            <span style="font-size:13px;font-weight:600;color:#0f172a;text-align:center;line-height:1.4;">Spanish La Liga</span>
+            <span style="font-size:11px;color:#94a3b8;">Spain</span>
+          </a>
+          <a href="football/" class="card-hover" style="flex-shrink:0;width:190px;background:#fff;border:1.5px solid #e2e8f0;border-radius:12px;padding:20px 16px;display:flex;flex-direction:column;align-items:center;gap:10px;">
+            <div style="width:52px;height:52px;background:linear-gradient(135deg,#0f2a0f,#16a34a);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;">🏆</div>
+            <span style="font-size:13px;font-weight:600;color:#0f172a;text-align:center;line-height:1.4;">FA Cup</span>
+            <span style="font-size:11px;color:#94a3b8;">England</span>
+          </a>
+          <a href="football/" class="card-hover" style="flex-shrink:0;width:190px;background:#fff;border:1.5px solid #e2e8f0;border-radius:12px;padding:20px 16px;display:flex;flex-direction:column;align-items:center;gap:10px;">
+            <div style="width:52px;height:52px;background:linear-gradient(135deg,#0a1628,#1d4ed8);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;">🌐</div>
+            <span style="font-size:13px;font-weight:600;color:#0f172a;text-align:center;line-height:1.4;">FIFA World Cup</span>
+            <span style="font-size:11px;color:#94a3b8;">International</span>
+          </a>
+        </div>
+      </section>
+
+      <!-- ══ TOP FOOTBALL TEAMS ══ -->
+      <section>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+          <h2 style="font-size:22px;font-weight:700;color:#0f172a;margin:0;">Top football teams</h2>
+          <div style="display:flex;gap:6px;">
+            <button onclick="{{ scrollTeamL }}" style="width:34px;height:34px;border-radius:50%;background:#fff;border:1.5px solid #e2e8f0;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;">‹</button>
+            <button onclick="{{ scrollTeamR }}" style="width:34px;height:34px;border-radius:50%;background:#fff;border:1.5px solid #e2e8f0;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;">›</button>
+          </div>
+        </div>
+        <div id="team-scroll" class="scroll-hide" style="display:flex;gap:14px;overflow-x:auto;padding-bottom:4px;scroll-behavior:smooth;">
+          <a href="football/english-premier-league/arsenal/" class="card-hover" style="flex-shrink:0;width:160px;background:#fff;border:1.5px solid #e2e8f0;border-radius:12px;padding:20px 16px;display:flex;flex-direction:column;align-items:center;gap:10px;">
+            <div style="width:56px;height:56px;border-radius:50%;background:#ef0107;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#fff;letter-spacing:-.3px;">AFC</div>
+            <span style="font-size:13px;font-weight:600;color:#0f172a;">Arsenal</span>
+            <span style="font-size:11px;color:#94a3b8;">Premier League</span>
+          </a>
+          <a href="football/english-premier-league/arsenal/" class="card-hover" style="flex-shrink:0;width:160px;background:#fff;border:1.5px solid #e2e8f0;border-radius:12px;padding:20px 16px;display:flex;flex-direction:column;align-items:center;gap:10px;">
+            <div style="width:56px;height:56px;border-radius:50%;background:#034694;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#fff;letter-spacing:-.3px;">CFC</div>
+            <span style="font-size:13px;font-weight:600;color:#0f172a;">Chelsea</span>
+            <span style="font-size:11px;color:#94a3b8;">Premier League</span>
+          </a>
+          <a href="football/english-premier-league/arsenal/" class="card-hover" style="flex-shrink:0;width:160px;background:#fff;border:1.5px solid #e2e8f0;border-radius:12px;padding:20px 16px;display:flex;flex-direction:column;align-items:center;gap:10px;">
+            <div style="width:56px;height:56px;border-radius:50%;background:#132257;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;letter-spacing:-.3px;">THFC</div>
+            <span style="font-size:13px;font-weight:600;color:#0f172a;">Tottenham</span>
+            <span style="font-size:11px;color:#94a3b8;">Premier League</span>
+          </a>
+          <a href="football/english-premier-league/arsenal/" class="card-hover" style="flex-shrink:0;width:160px;background:#fff;border:1.5px solid #e2e8f0;border-radius:12px;padding:20px 16px;display:flex;flex-direction:column;align-items:center;gap:10px;">
+            <div style="width:56px;height:56px;border-radius:50%;background:#C8102E;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#fff;letter-spacing:-.3px;">LFC</div>
+            <span style="font-size:13px;font-weight:600;color:#0f172a;">Liverpool</span>
+            <span style="font-size:11px;color:#94a3b8;">Premier League</span>
+          </a>
+          <a href="football/english-premier-league/arsenal/" class="card-hover" style="flex-shrink:0;width:160px;background:#fff;border:1.5px solid #e2e8f0;border-radius:12px;padding:20px 16px;display:flex;flex-direction:column;align-items:center;gap:10px;">
+            <div style="width:56px;height:56px;border-radius:50%;background:#DA291C;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;letter-spacing:-.3px;">MUFC</div>
+            <span style="font-size:13px;font-weight:600;color:#0f172a;">Man United</span>
+            <span style="font-size:11px;color:#94a3b8;">Premier League</span>
+          </a>
+          <a href="football/english-premier-league/arsenal/" class="card-hover" style="flex-shrink:0;width:160px;background:#fff;border:1.5px solid #e2e8f0;border-radius:12px;padding:20px 16px;display:flex;flex-direction:column;align-items:center;gap:10px;">
+            <div style="width:56px;height:56px;border-radius:50%;background:#004D98;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#fff;letter-spacing:-.3px;">FCB</div>
+            <span style="font-size:13px;font-weight:600;color:#0f172a;">FC Barcelona</span>
+            <span style="font-size:11px;color:#94a3b8;">La Liga</span>
+          </a>
+          <a href="football/english-premier-league/arsenal/" class="card-hover" style="flex-shrink:0;width:160px;background:#fff;border:1.5px solid #e2e8f0;border-radius:12px;padding:20px 16px;display:flex;flex-direction:column;align-items:center;gap:10px;">
+            <div style="width:56px;height:56px;border-radius:50%;background:#00529F;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;letter-spacing:-.3px;">RMCF</div>
+            <span style="font-size:13px;font-weight:600;color:#0f172a;">Real Madrid</span>
+            <span style="font-size:11px;color:#94a3b8;">La Liga</span>
+          </a>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <footer style="background:#0f172a;color:#94a3b8;padding:48px 24px 32px;">
+    <div style="max-width:1400px;margin:0 auto;">
+      <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:40px;">
+        <div><div style="font-size:18px;font-weight:700;color:#fff;margin-bottom:10px;">TicketMarketplace</div><p style="font-size:13px;color:#64748b;line-height:1.7;max-width:220px;margin:0;">The secondary ticket marketplace for live football events.</p></div>
+        <div><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:#64748b;margin-bottom:14px;">Support</div><div style="display:flex;flex-direction:column;gap:9px;"><a href="#" style="font-size:13px;color:#94a3b8;">Contact</a><a href="#" style="font-size:13px;color:#94a3b8;">FAQs</a><a href="#" style="font-size:13px;color:#94a3b8;">Blog</a></div></div>
+        <div><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:#64748b;margin-bottom:14px;">Company</div><div style="display:flex;flex-direction:column;gap:9px;"><a href="#" style="font-size:13px;color:#94a3b8;">Terms &amp; Conditions</a><a href="#" style="font-size:13px;color:#94a3b8;">Disclaimer</a><a href="#" style="font-size:13px;color:#94a3b8;">Privacy</a><a href="#" style="font-size:13px;color:#94a3b8;">Travel Agent &amp; Affiliate</a><a href="#" style="font-size:13px;color:#94a3b8;">Reviews</a></div></div>
+        <div><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:#64748b;margin-bottom:14px;">Follow Us</div><div style="display:flex;gap:14px;"><a href="#" style="font-size:20px;color:#64748b;">▶</a><a href="#" style="font-size:20px;color:#64748b;">f</a><a href="#" style="font-size:20px;color:#64748b;">◎</a><a href="#" style="font-size:20px;color:#64748b;">𝕏</a></div></div>
+      </div>
+      <div style="border-top:1px solid #1e293b;padding-top:20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
+        <p style="font-size:12px;color:#475569;margin:0;">⚠️ TicketMarketplace is a secondary market reseller. Prices may exceed face value.</p>
+        <p style="font-size:12px;color:#475569;margin:0;">© 2027 TicketMarketplace. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { authModal: false, authTab: 'signin', menuOpen: false };
+
+  renderVals() {
+    const { authModal, authTab, menuOpen } = this.state;
+    const t = authTab;
+    const scroll = (id, dir) => {
+      const el = document.getElementById(id);
+      if (el) el.scrollBy({ left: dir * 320, behavior: 'smooth' });
+    };
+    return {
+      authModal, menuOpen,
+      isSignIn: t==='signin', isSignUp: t==='signup', isGuest: t==='guest',
+      siWeight: t==='signin'?600:400, siColor: t==='signin'?'#2563eb':'#64748b', siBorder: t==='signin'?'2px solid #2563eb':'2px solid transparent',
+      suWeight: t==='signup'?600:400, suColor: t==='signup'?'#2563eb':'#64748b', suBorder: t==='signup'?'2px solid #2563eb':'2px solid transparent',
+      gWeight:  t==='guest'?600:400,  gColor:  t==='guest'?'#2563eb':'#64748b',  gBorder:  t==='guest'?'2px solid #2563eb':'2px solid transparent',
+      openModal:    () => this.setState({ authModal: true, authTab: 'signin', menuOpen: false }),
+      closeModal:   (e) => { if (e.target === e.currentTarget) this.setState({ authModal: false }); },
+      closeModalBtn:() => this.setState({ authModal: false }),
+      tabSignIn: () => this.setState({ authTab: 'signin' }),
+      tabSignUp: () => this.setState({ authTab: 'signup' }),
+      tabGuest:  () => this.setState({ authTab: 'guest' }),
+      openMenu:  () => this.setState({ menuOpen: true }),
+      closeMenu: () => this.setState({ menuOpen: false }),
+      scrollCatL:  () => scroll('cat-scroll',  -1),
+      scrollCatR:  () => scroll('cat-scroll',   1),
+      scrollCompL: () => scroll('comp-scroll', -1),
+      scrollCompR: () => scroll('comp-scroll',  1),
+      scrollTeamL: () => scroll('team-scroll', -1),
+      scrollTeamR: () => scroll('team-scroll',  1),
+    };
+  }
+}
+</script>
+<template id="__bundler_thumbnail"><svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg"><rect width="400" height="300" fill="#0f172a"/><text x="200" y="165" text-anchor="middle" font-family="sans-serif" font-size="18" font-weight="700" fill="#fff">TicketMarketplace</text></svg></template>
+</body>
+</html>

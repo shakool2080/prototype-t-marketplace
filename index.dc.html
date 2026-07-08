@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>*, *::before, *::after { box-sizing: border-box; } body { margin: 0; font-family: 'Inter', system-ui, sans-serif; color: #0f172a; background: #f8fafc; } a { text-decoration: none; color: inherit; }</style>
+</helmet>
+
+<div style="min-height:100vh;background:#f8fafc;padding:0 0 48px;">
+
+  <div style="background:#0f172a;padding:32px 24px 28px;">
+    <div style="max-width:900px;margin:0 auto;">
+      <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#64748b;margin-bottom:8px;">Prototype Navigator</div>
+      <h1 style="font-size:28px;font-weight:700;color:#fff;margin:0 0 6px;">TicketMarketplace</h1>
+      <p style="font-size:14px;color:#64748b;margin:0;">Click any page to open it in the prototype</p>
+    </div>
+  </div>
+
+  <div style="max-width:900px;margin:32px auto 0;padding:0 24px;display:flex;flex-direction:column;gap:32px;">
+
+    <section>
+      <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#94a3b8;margin-bottom:12px;">Browse</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;">
+        <a href="home.dc.html" style="background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:18px 20px;display:flex;align-items:center;gap:12px;box-shadow:0 1px 3px rgba(0,0,0,.04);">
+          <span style="font-size:22px;flex-shrink:0;">🏠</span>
+          <div><div style="font-size:14px;font-weight:600;color:#0f172a;">Home</div><div style="font-size:12px;color:#94a3b8;">Entry point</div></div>
+        </a>
+        <a href="performer.dc.html" style="background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:18px 20px;display:flex;align-items:center;gap:12px;box-shadow:0 1px 3px rgba(0,0,0,.04);">
+          <span style="font-size:22px;flex-shrink:0;">⚽</span>
+          <div><div style="font-size:14px;font-weight:600;color:#0f172a;">Performer / Team</div><div style="font-size:12px;color:#94a3b8;">Arsenal example</div></div>
+        </a>
+        <a href="event-group.dc.html" style="background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:18px 20px;display:flex;align-items:center;gap:12px;box-shadow:0 1px 3px rgba(0,0,0,.04);">
+          <span style="font-size:22px;flex-shrink:0;">📅</span>
+          <div><div style="font-size:14px;font-weight:600;color:#0f172a;">Event Group</div><div style="font-size:12px;color:#94a3b8;">Fixture dates</div></div>
+        </a>
+        <a href="city.dc.html" style="background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:18px 20px;display:flex;align-items:center;gap:12px;box-shadow:0 1px 3px rgba(0,0,0,.04);">
+          <span style="font-size:22px;flex-shrink:0;">🏙️</span>
+          <div><div style="font-size:14px;font-weight:600;color:#0f172a;">City</div><div style="font-size:12px;color:#94a3b8;">London example</div></div>
+        </a>
+        <a href="search.dc.html" style="background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:18px 20px;display:flex;align-items:center;gap:12px;box-shadow:0 1px 3px rgba(0,0,0,.04);">
+          <span style="font-size:22px;flex-shrink:0;">🔍</span>
+          <div><div style="font-size:14px;font-weight:600;color:#0f172a;">Search / Events</div><div style="font-size:12px;color:#94a3b8;">Results list</div></div>
+        </a>
+      </div>
+    </section>
+
+    <section>
+      <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#94a3b8;margin-bottom:12px;">Event Detail</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;">
+        <a href="event.dc.html" style="background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:18px 20px;display:flex;align-items:center;gap:12px;box-shadow:0 1px 3px rgba(0,0,0,.04);">
+          <span style="font-size:22px;flex-shrink:0;">🎟️</span>
+          <div><div style="font-size:14px;font-weight:600;color:#0f172a;">Event</div><div style="font-size:12px;color:#94a3b8;">Arsenal vs Chelsea</div></div>
+        </a>
+      </div>
+    </section>
+
+    <section>
+      <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#94a3b8;margin-bottom:12px;">Purchase Flow</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;">
+        <a href="checkout.dc.html" style="background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:18px 20px;display:flex;align-items:center;gap:12px;box-shadow:0 1px 3px rgba(0,0,0,.04);">
+          <span style="font-size:22px;flex-shrink:0;">💳</span>
+          <div><div style="font-size:14px;font-weight:600;color:#0f172a;">Checkout</div><div style="font-size:12px;color:#94a3b8;">Payment form</div></div>
+        </a>
+        <a href="confirmation.dc.html" style="background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:18px 20px;display:flex;align-items:center;gap:12px;box-shadow:0 1px 3px rgba(0,0,0,.04);">
+          <span style="font-size:22px;flex-shrink:0;">✅</span>
+          <div><div style="font-size:14px;font-weight:600;color:#0f172a;">Confirmation</div><div style="font-size:12px;color:#94a3b8;">Order confirmed</div></div>
+        </a>
+      </div>
+    </section>
+
+    <section>
+      <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#94a3b8;margin-bottom:12px;">Account</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;">
+        <a href="my-account.dc.html" style="background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:18px 20px;display:flex;align-items:center;gap:12px;box-shadow:0 1px 3px rgba(0,0,0,.04);">
+          <span style="font-size:22px;flex-shrink:0;">👤</span>
+          <div><div style="font-size:14px;font-weight:600;color:#0f172a;">My Account</div><div style="font-size:12px;color:#94a3b8;">Profile &amp; settings</div></div>
+        </a>
+        <a href="my-orders.dc.html" style="background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:18px 20px;display:flex;align-items:center;gap:12px;box-shadow:0 1px 3px rgba(0,0,0,.04);">
+          <span style="font-size:22px;flex-shrink:0;">📦</span>
+          <div><div style="font-size:14px;font-weight:600;color:#0f172a;">My Orders</div><div style="font-size:12px;color:#94a3b8;">Order history</div></div>
+        </a>
+      </div>
+    </section>
+
+    <section>
+      <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#94a3b8;margin-bottom:12px;">Buyer Journey</div>
+      <div style="background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:20px;overflow-x:auto;">
+        <div style="display:flex;align-items:center;gap:6px;white-space:nowrap;font-size:13px;">
+          <a href="home.dc.html" style="background:#eff6ff;color:#2563eb;padding:6px 12px;border-radius:6px;font-weight:600;">Home</a>
+          <span style="color:#94a3b8;">→</span>
+          <a href="performer.dc.html" style="background:#f1f5f9;color:#374151;padding:6px 12px;border-radius:6px;font-weight:500;">Team</a>
+          <span style="color:#94a3b8;">/</span>
+          <a href="search.dc.html" style="background:#f1f5f9;color:#374151;padding:6px 12px;border-radius:6px;font-weight:500;">Search</a>
+          <span style="color:#94a3b8;">→</span>
+          <a href="event.dc.html" style="background:#f1f5f9;color:#374151;padding:6px 12px;border-radius:6px;font-weight:500;">Event</a>
+          <span style="color:#94a3b8;">→</span>
+          <a href="checkout.dc.html" style="background:#f1f5f9;color:#374151;padding:6px 12px;border-radius:6px;font-weight:500;">Checkout</a>
+          <span style="color:#94a3b8;">→</span>
+          <a href="confirmation.dc.html" style="background:#dcfce7;color:#166534;padding:6px 12px;border-radius:6px;font-weight:600;">✓ Confirmed</a>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>
